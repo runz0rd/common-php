@@ -1,0 +1,35 @@
+{
+    "name": "devtech/common-php",
+    "description": "My collection of Common libraries for php.",
+    "keywords": ["common", "library", "php"],
+    "license": "proprietary",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Milos Pejanovic",
+            "email": "pejan123@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "milos.pejanovic@devtechgroup.com",
+        "issues": "https://github.com/milos-pejanovic-devtech/common-php/issues"
+    },
+    "require": {
+        "php": ">=7.0.1",
+        "netresearch/jsonmapper": "0.11.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Common\\": "src/Common/"
+        }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/"
+        ]
+    }
+}
