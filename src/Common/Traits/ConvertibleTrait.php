@@ -15,15 +15,16 @@ trait ConvertibleTrait {
 	 * @return array
 	 * @throws \InvalidArgumentException
 	 */
-	public function toArray() {
-		$preparedJson = $this->toJson();
-		$preparedArray = json_decode($preparedJson, true);
 
-		if(is_null($preparedArray)) {
+	public function toArray() {
+		$json = $this->toJson();
+		$array = json_decode($json, true);
+
+		if(is_null($array)) {
 			throw new \InvalidArgumentException('Cannot convert to array.');
 		}
 
-		return $preparedArray;
+		return $array;
 	}
 
 	/**
@@ -32,13 +33,13 @@ trait ConvertibleTrait {
 	 */
 	public function toJson() {
 		$mapper = new ObjectMapper();
-		$preparedObject = $mapper->prepare($this);
-		$preparedJson = json_encode($preparedObject);
+		$unmappedObject = $mapper->unmap($this);
+		$json = json_encode($unmappedObject);
 
-		if(!$preparedJson) {
+		if(!$json) {
 			throw new \InvalidArgumentException('Cannot convert to json.');
 		}
 
-		return $preparedJson;
+		return $json;
 	}
 }

@@ -8,6 +8,6 @@
 
 namespace Common\Mapper;
 
-class MapperValidationException extends MapperException {
+class MapperException extends \Exception {
 
 }

@@ -8,6 +8,7 @@
 
 namespace Common\Traits;
 
+use Common\Mapper\MapperException;
 use Common\Mapper\ObjectMapper;
 use Common\Mapper\MapperValidationException;
 
@@ -20,9 +21,10 @@ trait MappableTrait {
 	 * @throws MapperValidationException
 	 */
 	public function mapFromArray(array $data, bool $validate = false) {
-		$object = json_decode(json_encode($data));
+		$json = json_encode($data);
+		$object = json_decode($json);
 
-		if(is_null($object)) {
+		if(empty($object)) {
 			throw new \InvalidArgumentException('Invalid array supplied.');
 		}
 
@@ -38,7 +40,7 @@ trait MappableTrait {
 	public function mapFromJson(string $data, bool $validate = false) {
 		$object = json_decode($data);
 
-		if(is_null($object)) {
+		if(empty($object)) {
 			throw new \InvalidArgumentException('Invalid json string supplied.');
 		}
 
@@ -48,12 +50,11 @@ trait MappableTrait {
 	/**
 	 * @param object $object
 	 * @param bool $validate
-	 * @throws \InvalidArgumentException
+	 * @throws MapperException
 	 * @throws MapperValidationException
 	 */
 	public function mapFromObject($object, bool $validate = false) {
-		$mapper = new ObjectMapper();
-		$mapper->bExceptionOnMissingData = $validate;
+		$mapper = new ObjectMapper($validate);
 		$mapper->map($object, $this);
 	}
 }

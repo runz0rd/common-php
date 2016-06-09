@@ -8,9 +8,10 @@
  */
 
 /**
- * Class MapperModel
+ * Class MapperModelWithRoot
+ * @root my_fancy_root
  */
-class MapperModel {
+class MapperModelWithRoot {
 	use \Common\Traits\MappableTrait;
 	use \Common\Traits\ConvertibleTrait;
 
@@ -42,7 +43,7 @@ class MapperModel {
 
 	/**
 	 * @required
-	 * @var MapperModel[]
+	 * @var MapperModelWithRoot[]
 	 */
 	public $testObjectArray;
 

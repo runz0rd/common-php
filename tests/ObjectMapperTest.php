@@ -30,7 +30,7 @@ class ObjectMapperTest extends \PHPUnit_Framework_TestCase {
 		$model->testArray[] = 'testVal5';
 
 		$json = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{},"testVal4","testVal5"]}';
-		$preparedObject = $this->objectMapper->prepare($model);
+		$preparedObject = $this->objectMapper->unmap($model);
 
 		$this->assertEquals($json, json_encode($preparedObject));
 	}
@@ -39,7 +39,7 @@ class ObjectMapperTest extends \PHPUnit_Framework_TestCase {
 		$json = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{},"testVal4","testVal5"]}';
 		$mappedModel = $this->objectMapper->map(json_decode($json), new MapperModel());
 
-		$preparedObject = $this->objectMapper->prepare($mappedModel);
+		$preparedObject = $this->objectMapper->unmap($mappedModel);
 
 		$this->assertEquals($json, json_encode($preparedObject));
 	}
