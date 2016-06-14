@@ -1,7 +1,7 @@
 {
     "name": "devtech/common-php",
     "description": "My collection of Common libraries for php.",
-    "keywords": ["common", "library", "php"],
+    "keywords": ["common", "library", "php", "object", "mapper", "validator", "traits"],
     "license": "proprietary",
     "type": "library",
     "authors": [
