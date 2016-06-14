@@ -7,84 +7,65 @@
  */
 
 namespace Common\Mapper;
-use ReflectionClass;
+use Common\Models\ModelClassData;
+use Common\Models\ModelPropertyData;
 
 class ObjectMapper {
-
-	/**
-	 * @var bool
-	 */
-	protected $isStrict;
-
-	/**
-	 * ObjectMapper constructor.
-	 * @param bool $isStrict
-	 */
-	public function __construct(bool $isStrict = false) {
-		$this->isStrict = $isStrict;
-	}
 
 	/**
 	 * @param object $sourceObject
 	 * @param object $customObject
 	 * @return object
-	 * @throws MapperException
+	 * @throws ObjectMapperException
+	 * @throws \InvalidArgumentException
 	 */
 	public function map($sourceObject, $customObject) {
-		if(empty($sourceObject) || empty($customObject)) {
-			throw new MapperException('Invalid object(s) supplied for mapping.');
+		if(self::isObjectEmpty($sourceObject)) {
+			throw new \InvalidArgumentException('Invalid object(s) supplied for mapping.');
 		}
-		$objectClass = new ObjectClass($customObject);
+		$modelClassData = new ModelClassData($customObject);
 
-		if($this->hasRoot($sourceObject, $objectClass->rootName)) {
-			$this->validateSourceRoot($sourceObject, $objectClass->rootName);
-			$sourceObject = $sourceObject->{$objectClass->rootName};
+		if(self::hasRoot($sourceObject, $modelClassData->rootName)) {
+			$sourceObject = $sourceObject->{$modelClassData->rootName};
 		}
 
-		foreach($objectClass->properties as $property) {
+		foreach($modelClassData->properties as $property) {
 			$sourcePropertyValue = $this->findObjectValue($property, $sourceObject);
-			$this->validateType($property, $sourcePropertyValue);
-			$this->validateRequired($property, $sourcePropertyValue);
 
 			$mappedPropertyValue = $this->mapValueByType($property->type, $sourcePropertyValue);
-			$property->setPropertyValue($customObject, $mappedPropertyValue);
+			$property->setPropertyValue($mappedPropertyValue);
+		}
+
+		if(self::isObjectEmpty($customObject)) {
+			throw new ObjectMapperException('No values mapped in object.');
 		}
 
 		return $customObject;
 	}
 
-	protected function hasRoot($sourceObject, string $rootName) {
-		$hasRoot = false;
-		if(!empty($rootName) && isset($sourceObject->$rootName)) {
-			$hasRoot = true;
-		}
-
-		return $hasRoot;
-	}
-
 	/**
 	 * @param object $customObject
 	 * @return \stdClass
-	 * @throws MapperException
+	 * @throws ObjectMapperException
 	 */
 	public function unmap($customObject) {
 		if(empty($customObject)) {
-			throw new MapperException('Invalid object supplied for unmapping.');
+			throw new ObjectMapperException('Invalid object supplied for unmapping.');
 		}
 
-		$objectClass = new ObjectClass($customObject);
+		$modelClassData = new ModelClassData($customObject);
 		$unmappedObject = new \stdClass();
-		foreach($objectClass->properties as $property) {
+		foreach($modelClassData->properties as $property) {
 			$propertyKey = $property->name;
-			$propertyValue = $property->getPropertyValue($customObject);
+			$propertyValue = $property->getPropertyValue();
 			if(empty($propertyValue)) {
 				continue;
 			}
 			$unmappedObject->$propertyKey = $this->unmapValueByType($property->type, $propertyValue);
 		}
 
-		if(!empty($objectClass->rootName)) {
-			$unmappedObject = $this->addRootElement($unmappedObject, $objectClass->rootName);
+		if(!empty($modelClassData->rootName)) {
+			$unmappedObject = $this->addRootElement($unmappedObject, $modelClassData->rootName);
 		}
 
 		return $unmappedObject;
@@ -101,7 +82,7 @@ class ObjectMapper {
 	 * @param string $type
 	 * @param mixed $value
 	 * @return array|mixed|object
-	 * @throws MapperException
+	 * @throws ObjectMapperException
 	 */
 	protected function mapValueByType(string $type, $value) {
 		switch(gettype($value)) {
@@ -119,7 +100,7 @@ class ObjectMapper {
 				$mappedValue = $value;
 				break;
 			default:
-				throw new MapperException('Invalid type ' . gettype($value) .' supplied for property.');
+				throw new ObjectMapperException('Invalid type ' . gettype($value) .' supplied for property.');
 				break;
 		}
 
@@ -145,7 +126,7 @@ class ObjectMapper {
 	 * @param string $type
 	 * @param array $value
 	 * @return array
-	 * @throws MapperException
+	 * @throws ObjectMapperException
 	 */
 	protected function mapArrayValue(string $type, array $value) {
 		$mappedValue = [];
@@ -184,7 +165,7 @@ class ObjectMapper {
 	 * @param string $type
 	 * @param object $value
 	 * @return object
-	 * @throws MapperException
+	 * @throws ObjectMapperException
 	 */
 	protected function unmapObjectValue(string $type, $value) {
 		$unmappedValue = $value;
@@ -212,34 +193,15 @@ class ObjectMapper {
 		return $mappedValue;
 	}
 
-	protected function validateType(ObjectProperty $objectProperty, $value) {
-		if($this->isStrict && isset($value) && $objectProperty->type != gettype($value)) {
-			throw new MapperValidationException('Property ' . $objectProperty->name . ' of type ' . $objectProperty->type . ' not matched while mapping object.');
-		}
-	}
-
-	protected function validateRequired(ObjectProperty $objectProperty, $value) {
-		if($this->isStrict && !isset($value) && $objectProperty->required) {
-			throw new MapperValidationException('Required property ' . $objectProperty->name . ' not matched while mapping object.');
-		}
-	}
-
-	protected function validateSourceRoot($sourceObject, string $rootName) {
-		if($this->isStrict && !empty($rootName) && !isset($sourceObject->$rootName)) {
-			throw new MapperValidationException('Source class doesnt have a root element named ' . $rootName . ' defined.');
-		}
-	}
-
 	/**
-	 * @param ObjectProperty $objectProperty
+	 * @param ModelPropertyData $ModelPropertyData
 	 * @param $sourceObject
 	 * @return object|null
-	 * @throws MapperValidationException
 	 */
-	protected function findObjectValue(ObjectProperty $objectProperty, $sourceObject) {
+	protected function findObjectValue(ModelPropertyData $ModelPropertyData, $sourceObject) {
 		$objectValue = null;
 		foreach($sourceObject as $key => $value) {
-			if($objectProperty->name == $key) {
+			if($ModelPropertyData->name == $key) {
 				$objectValue = $value;
 				break;
 			}
@@ -259,5 +221,40 @@ class ObjectMapper {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * @param object $sourceObject
+	 * @param string $rootName
+	 * @return bool
+	 * @throws ObjectMapperException
+	 */
+	protected static function hasRoot($sourceObject, string $rootName) {
+		$hasRoot = true;
+		if(empty($rootName)) {
+			$hasRoot = false;
+		}
+		if(!empty($rootName) && !isset($sourceObject->$rootName)) {
+			throw new ObjectMapperException('The source object has no ' . $rootName . ' root defined.');
+		}
+
+		return $hasRoot;
+	}
+
+	/**
+	 * @param object $object
+	 * @return bool
+	 */
+	public static function isObjectEmpty($object) {
+		$isEmpty = true;
+		$array = (array) $object;
+		foreach($array as $value) {
+			if (!empty($value)) {
+				$isEmpty = false;
+				break;
+			}
+		}
+
+		return $isEmpty;
 	}
 }

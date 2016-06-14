@@ -20,7 +20,7 @@ class ObjectMapperTest extends \PHPUnit_Framework_TestCase {
 		parent::setUp();
 	}
 
-	public function testPrepare() {
+	public function testUnmap() {
 		$model = new MapperModel();
 		$model->testProperty1 = 'testVal1';
 		$model->testProperty2 = 'testVal2';

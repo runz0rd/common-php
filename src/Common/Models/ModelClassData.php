@@ -6,15 +6,27 @@
  * Time: 1:30 PM
  */
 
-namespace Common\Mapper;
+namespace Common\Models;
 
-class ObjectClass {
+class ModelClassData {
 
+	/**
+	 * @var string
+	 */
+	public $className;
+
+	/**
+	 * @var string
+	 */
 	public $namespace;
+
+	/**
+	 * @var string
+	 */
 	public $rootName;
 
 	/**
-	 * @var ObjectProperty[]
+	 * @var ModelPropertyData[]
 	 */
 	public $properties;
 
@@ -24,23 +36,25 @@ class ObjectClass {
 	public $docBlock;
 
 	/**
-	 * ObjectClass constructor.
+	 * ModelClassData constructor.
 	 * @param object $customObject
 	 */
 	public function __construct($customObject) {
 		$reflectionClass = new \ReflectionClass($customObject);
 		$this->docBlock = new DocBlock($reflectionClass->getDocComment());
 
+		$this->className = $reflectionClass->getName();
+
 		$this->namespace = $reflectionClass->getNamespaceName();
 
 		$this->rootName = '';
 		if($this->docBlock->annotationExists('root') && !empty($this->docBlock->getAnnotation('root'))) {
-			$this->rootName = $this->docBlock->getAnnotation('root');
+			$this->rootName = $this->docBlock->getFirstAnnotation('root');
 		}
 
 		$properties = $reflectionClass->getProperties();
 		foreach($properties as $property) {
-			$this->properties[] = new ObjectProperty($property, $this->namespace);
+			$this->properties[] = new ModelPropertyData($property, $customObject, $this->namespace);
 		}
 	}
 }

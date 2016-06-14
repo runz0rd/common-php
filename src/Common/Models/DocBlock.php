@@ -1,13 +1,12 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: milos.pejanovic
- * Date: 6/7/2016
- * Time: 3:56 PM
+ * Date: 6/10/2016
+ * Time: 10:16 AM
  */
-
-namespace Common\Mapper;
-
+namespace Common\Models;
 
 class DocBlock {
 
@@ -54,15 +53,26 @@ class DocBlock {
 
 	/**
 	 * @param $name
-	 * @param int $index
 	 * @return string
 	 */
-	public function getAnnotation($name, $index = 0) {
-		if(!isset($this->annotations[$name][$index])) {
-			throw new \InvalidArgumentException('Annotation ' . $name . ' index ' . $index . ' not found in docBlock.');
+	public function getFirstAnnotation($name) {
+		if(!isset($this->annotations[$name][0])) {
+			throw new \InvalidArgumentException('Annotation ' . $name . ' not found in docBlock.');
 		}
 
-		return $this->annotations[$name][$index];
+		return $this->annotations[$name][0];
+	}
+
+	/**
+	 * @param $name
+	 * @return array
+	 */
+	public function getAnnotation($name) {
+		if(!isset($this->annotations[$name])) {
+			throw new \InvalidArgumentException('Annotation ' . $name . ' not found in docBlock.');
+		}
+
+		return $this->annotations[$name];
 	}
 
 	/**
