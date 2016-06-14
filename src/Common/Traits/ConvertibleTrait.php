@@ -15,7 +15,6 @@ trait ConvertibleTrait {
 	 * @return array
 	 * @throws \InvalidArgumentException
 	 */
-
 	public function toArray() {
 		$json = $this->toJson();
 		$array = json_decode($json, true);

@@ -13,6 +13,7 @@
 class MapperModel {
 	use \Common\Traits\MappableTrait;
 	use \Common\Traits\ConvertibleTrait;
+	use \Common\Traits\ValidatableTrait;
 
 	/**
 	 * @required
@@ -21,27 +22,27 @@ class MapperModel {
 	public $testProperty1;
 
 	/**
-	 * @required
+	 * @required create
+	 * @required update
 	 * @name some?wierd-@ss::name
 	 * @var string
 	 */
 	public $testProperty2;
 
 	/**
-	 * @required
+	 * @required read
+	 * @required delete
 	 * @name normalName
 	 * @var string
 	 */
 	public $testProperty3;
 
 	/**
-	 * @required
 	 * @var array
 	 */
 	public $testArray;
 
 	/**
-	 * @required
 	 * @var MapperModel[]
 	 */
 	public $testObjectArray;

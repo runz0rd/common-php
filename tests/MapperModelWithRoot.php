@@ -14,6 +14,7 @@
 class MapperModelWithRoot {
 	use \Common\Traits\MappableTrait;
 	use \Common\Traits\ConvertibleTrait;
+	use \Common\Traits\ValidatableTrait;
 
 	/**
 	 * @required

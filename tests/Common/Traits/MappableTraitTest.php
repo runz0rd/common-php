@@ -13,8 +13,6 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider validValues
 	 */
 	public function testMapFromArray($json, $model, $expectedModel) {
-//		$nestedJson = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":[]}';
-//		$json = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":['.$nestedJson.','.$nestedJson.','.$nestedJson.']}';
 		$array = json_decode($json, true);
 
 		/** @var MapperModel|MapperModelWithRoot $model */
@@ -27,9 +25,6 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider validValues
 	 */
 	public function testMapFromJson($json, $model, $expectedModel) {
-//		$nestedJson = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":[]}';
-//		$json = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":['.$nestedJson.','.$nestedJson.','.$nestedJson.']}';
-
 		/** @var MapperModel|MapperModelWithRoot $model */
 		$model->mapFromJson($json);
 
@@ -40,8 +35,6 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider validValues
 	 */
 	public function testMapFromObject($json, $model, $expectedModel) {
-//		$nestedJson = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":[]}';
-//		$json = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":['.$nestedJson.','.$nestedJson.','.$nestedJson.']}';
 		$object = json_decode($json);
 
 		/** @var MapperModel|MapperModelWithRoot $model */
@@ -58,7 +51,7 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 		$array = json_decode($json, true);
 
 		/** @var MapperModel|MapperModelWithRoot $model */
-		$model->mapFromArray($array, true);
+		$model->mapFromArray($array);
 	}
 
 	/**
@@ -67,7 +60,7 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testMapFromJsonFail($json, $model) {
 		/** @var MapperModel|MapperModelWithRoot $model */
-		$model->mapFromJson($json, true);
+		$model->mapFromJson($json);
 	}
 
 	/**
@@ -78,7 +71,7 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 		$object = json_decode($json);
 
 		/** @var MapperModel|MapperModelWithRoot $model */
-		$model->mapFromObject($object, true);
+		$model->mapFromObject($object);
 	}
 
 	public function validValues() {
@@ -139,7 +132,8 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 	public function invalidValues() {
 		return [
 			['{}', new MapperModel()],
-			['{"testProperty1":"testVal1","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"]}', new MapperModel()],
+			['{"testProperty1":"","normalName":"","testArray":""}', new MapperModel()],
+			['{"root":{"testProperty1":"testVal1","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"]}}', new MapperModel()],
 			['{"unexpected_root":{"testProperty1":"testVal1","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"]}}', new MapperModelWithRoot()],
 			['{"testProperty1":"testVal1","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"]}', new MapperModelWithRoot()],
 		];

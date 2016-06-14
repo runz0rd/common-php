@@ -7,20 +7,17 @@
  */
 
 namespace Common\Traits;
-
-use Common\Mapper\MapperException;
+use Common\Mapper\ObjectMapperException;
 use Common\Mapper\ObjectMapper;
-use Common\Mapper\MapperValidationException;
 
 trait MappableTrait {
 
 	/**
 	 * @param array $data
-	 * @param bool $validate
 	 * @throws \InvalidArgumentException
-	 * @throws MapperValidationException
+	 * @throws ObjectMapperException
 	 */
-	public function mapFromArray(array $data, bool $validate = false) {
+	public function mapFromArray(array $data) {
 		$json = json_encode($data);
 		$object = json_decode($json);
 
@@ -28,33 +25,30 @@ trait MappableTrait {
 			throw new \InvalidArgumentException('Invalid array supplied.');
 		}
 
-		$this->mapFromObject($object, $validate);
+		$this->mapFromObject($object);
 	}
 
 	/**
 	 * @param string $data
-	 * @param bool $validate
 	 * @throws \InvalidArgumentException
-	 * @throws MapperValidationException
+	 * @throws ObjectMapperException
 	 */
-	public function mapFromJson(string $data, bool $validate = false) {
+	public function mapFromJson(string $data) {
 		$object = json_decode($data);
 
 		if(empty($object)) {
 			throw new \InvalidArgumentException('Invalid json string supplied.');
 		}
 
-		$this->mapFromObject($object, $validate);
+		$this->mapFromObject($object);
 	}
 
 	/**
-	 * @param object $object
-	 * @param bool $validate
-	 * @throws MapperException
-	 * @throws MapperValidationException
+	 * @param $object
+	 * @throws ObjectMapperException
 	 */
-	public function mapFromObject($object, bool $validate = false) {
-		$mapper = new ObjectMapper($validate);
+	public function mapFromObject($object) {
+		$mapper = new ObjectMapper();
 		$mapper->map($object, $this);
 	}
 }
