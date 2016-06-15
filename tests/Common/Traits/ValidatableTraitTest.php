@@ -32,6 +32,13 @@ class ValidatableTraitTest extends \PHPUnit_Framework_TestCase {
 		$model->testProperty2 = 'testVal2';
 		$model->testProperty3 = 'testVal3';
 
+		$nestedModel = new MapperModel();
+		$nestedModel->testProperty1 = 'testVal1';
+		$nestedModel->testProperty2 = 'testVal2';
+		$nestedModel->testProperty3 = 'testVal3';
+
+		$model->testObjectArray[] = $nestedModel;
+
 		return [
 			[$model, 'create'],
 			[$model, 'update'],
@@ -45,6 +52,12 @@ class ValidatableTraitTest extends \PHPUnit_Framework_TestCase {
 		$model = new MapperModel();
 		$model->testProperty2 = new stdClass();
 		$model->testArray = ["asd"];
+
+		$nestedModel = new MapperModel();
+		$nestedModel->testProperty1 = null;
+		$nestedModel->testProperty2 = true;
+
+		$model->testObjectArray[] = $nestedModel;
 
 		return [
 			[$model, 'create'],
