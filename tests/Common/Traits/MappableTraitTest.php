@@ -133,7 +133,6 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 		return [
 			['{}', new MapperModel()],
 			['{"testProperty1":"","normalName":"","testArray":""}', new MapperModel()],
-			['{"root":{"testProperty1":"testVal1","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"]}}', new MapperModel()],
 			['{"unexpected_root":{"testProperty1":"testVal1","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"]}}', new MapperModelWithRoot()],
 			['{"testProperty1":"testVal1","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"]}', new MapperModelWithRoot()],
 		];

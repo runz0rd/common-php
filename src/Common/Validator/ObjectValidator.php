@@ -30,7 +30,7 @@ class ObjectValidator {
 	 * @throws \InvalidArgumentException
 	 */
 	public function validate($object, string $validationRequiredType = '') {
-		if(ObjectMapper::isObjectEmpty($object)) {
+		if(is_null($object)) {
 			throw new \InvalidArgumentException('Invalid object(s) supplied for validation.');
 		}
 		$modelClassData = new ModelClassData($object);

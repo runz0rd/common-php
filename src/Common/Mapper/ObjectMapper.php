@@ -36,10 +36,6 @@ class ObjectMapper {
 			$property->setPropertyValue($mappedPropertyValue);
 		}
 
-		if(self::isObjectEmpty($customObject)) {
-			throw new ObjectMapperException('No values mapped in object.');
-		}
-
 		return $customObject;
 	}
 
