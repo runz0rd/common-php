@@ -12,11 +12,12 @@ use Common\Mapper\ObjectMapper;
 trait ConvertibleTrait {
 
 	/**
+	 * @param bool $useRoot
 	 * @return array
 	 * @throws \InvalidArgumentException
 	 */
-	public function toArray() {
-		$json = $this->toJson();
+	public function toArray(bool $useRoot = true) {
+		$json = $this->toJson($useRoot);
 		$array = json_decode($json, true);
 
 		if(is_null($array)) {
@@ -27,12 +28,13 @@ trait ConvertibleTrait {
 	}
 
 	/**
+	 * @param bool $useRoot
 	 * @return string
 	 * @throws \InvalidArgumentException
 	 */
-	public function toJson() {
+	public function toJson(bool $useRoot = true) {
 		$mapper = new ObjectMapper();
-		$unmappedObject = $mapper->unmap($this);
+		$unmappedObject = $mapper->unmap($this, $useRoot);
 		$json = json_encode($unmappedObject);
 
 		if(!$json) {

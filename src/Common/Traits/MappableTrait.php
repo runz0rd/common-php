@@ -14,10 +14,11 @@ trait MappableTrait {
 
 	/**
 	 * @param array $data
+	 * @param bool $useRoot
 	 * @throws \InvalidArgumentException
 	 * @throws ObjectMapperException
 	 */
-	public function mapFromArray(array $data) {
+	public function mapFromArray(array $data, bool $useRoot = true) {
 		$json = json_encode($data);
 		$object = json_decode($json);
 
@@ -25,30 +26,32 @@ trait MappableTrait {
 			throw new \InvalidArgumentException('Invalid array supplied.');
 		}
 
-		$this->mapFromObject($object);
+		$this->mapFromObject($object, $useRoot);
 	}
 
 	/**
 	 * @param string $data
+	 * @param bool $useRoot
 	 * @throws \InvalidArgumentException
 	 * @throws ObjectMapperException
 	 */
-	public function mapFromJson(string $data) {
+	public function mapFromJson(string $data, bool $useRoot = true) {
 		$object = json_decode($data);
 
 		if(empty($object)) {
 			throw new \InvalidArgumentException('Invalid json string supplied.');
 		}
 
-		$this->mapFromObject($object);
+		$this->mapFromObject($object, $useRoot);
 	}
 
 	/**
 	 * @param $object
+	 * @param bool $useRoot
 	 * @throws ObjectMapperException
 	 */
-	public function mapFromObject($object) {
+	public function mapFromObject($object, bool $useRoot = true) {
 		$mapper = new ObjectMapper();
-		$mapper->map($object, $this);
+		$mapper->map($object, $this, $useRoot);
 	}
 }
