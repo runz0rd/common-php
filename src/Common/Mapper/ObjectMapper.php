@@ -15,18 +15,17 @@ class ObjectMapper {
 	/**
 	 * @param object $sourceObject
 	 * @param object $customObject
-	 * @param bool $useRoot
 	 * @return object
 	 * @throws ObjectMapperException
 	 * @throws \InvalidArgumentException
 	 */
-	public function map($sourceObject, $customObject, bool $useRoot = true) {
+	public function map($sourceObject, $customObject) {
 		if(self::isObjectEmpty($sourceObject)) {
 			throw new \InvalidArgumentException('Invalid object(s) supplied for mapping.');
 		}
 		$modelClassData = new ModelClassData($customObject);
 
-		if($useRoot && self::hasRoot($sourceObject, $modelClassData->rootName)) {
+		if(self::hasRoot($sourceObject, $modelClassData->rootName)) {
 			$sourceObject = $sourceObject->{$modelClassData->rootName};
 		}
 
@@ -42,11 +41,10 @@ class ObjectMapper {
 
 	/**
 	 * @param object $customObject
-	 * @param bool $useRoot
 	 * @return \stdClass
 	 * @throws ObjectMapperException
 	 */
-	public function unmap($customObject, bool $useRoot = true) {
+	public function unmap($customObject) {
 		if(empty($customObject)) {
 			throw new ObjectMapperException('Invalid object supplied for unmapping.');
 		}
@@ -62,7 +60,7 @@ class ObjectMapper {
 			$unmappedObject->$propertyKey = $this->unmapValueByType($property->type, $propertyValue);
 		}
 
-		if($useRoot && !empty($modelClassData->rootName)) {
+		if(!empty($modelClassData->rootName)) {
 			$unmappedObject = $this->addRootElement($unmappedObject, $modelClassData->rootName);
 		}
 
@@ -228,9 +226,9 @@ class ObjectMapper {
 	 * @throws ObjectMapperException
 	 */
 	protected static function hasRoot($sourceObject, string $rootName) {
-		$hasRoot = true;
-		if(empty($rootName)) {
-			$hasRoot = false;
+		$hasRoot = false;
+		if(!empty($rootName) && isset($sourceObject->$rootName)) {
+			$hasRoot = true;
 		}
 		if(!empty($rootName) && !isset($sourceObject->$rootName)) {
 			throw new ObjectMapperException('The source object has no ' . $rootName . ' root defined.');
