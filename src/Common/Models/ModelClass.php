@@ -8,7 +8,7 @@
 
 namespace Common\Models;
 
-class ModelClassData {
+class ModelClass {
 
 	/**
 	 * @var string
@@ -26,7 +26,7 @@ class ModelClassData {
 	public $rootName;
 
 	/**
-	 * @var ModelPropertyData[]
+	 * @var ModelProperty[]
 	 */
 	public $properties;
 
@@ -42,9 +42,7 @@ class ModelClassData {
 	public function __construct($customObject) {
 		$reflectionClass = new \ReflectionClass($customObject);
 		$this->docBlock = new DocBlock($reflectionClass->getDocComment());
-
 		$this->className = $reflectionClass->getName();
-
 		$this->namespace = $reflectionClass->getNamespaceName();
 
 		$this->rootName = '';
@@ -54,7 +52,7 @@ class ModelClassData {
 
 		$properties = $reflectionClass->getProperties();
 		foreach($properties as $property) {
-			$this->properties[] = new ModelPropertyData($property, $customObject, $this->namespace);
+			$this->properties[] = new ModelProperty($property, $customObject, $this->namespace);
 		}
 	}
 }

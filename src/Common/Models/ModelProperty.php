@@ -9,7 +9,12 @@
 namespace Common\Models;
 use Common\Mapper\ObjectMapper;
 
-class ModelPropertyData {
+class ModelProperty {
+
+	/**
+	 * @var string
+	 */
+	public $className;
 
 	/**
 	 * @var string
@@ -17,14 +22,14 @@ class ModelPropertyData {
 	public $propertyName;
 
 	/**
-	 * @var string
+	 * @var ModelPropertyType
 	 */
-	public $name;
+	public $type;
 
 	/**
 	 * @var string
 	 */
-	public $type;
+	public $annotatedName;
 
 	/**
 	 * @var bool
@@ -61,21 +66,20 @@ class ModelPropertyData {
 		$this->property = $property;
 		$this->object = $object;
 		$this->docBlock = new DocBlock($property->getDocComment());
+
+		$this->className = get_class($object);
+
 		$this->propertyName = $property->getName();
-
-		$this->name = $property->getName();
 		if($this->docBlock->annotationExists('name')) {
-			$this->name = $this->docBlock->getFirstAnnotation('name');
+			$this->annotatedName = $this->docBlock->getFirstAnnotation('name');
 		}
 
-		$this->type = 'NULL';
+		$propertyType = gettype($this->property->getValue($object));
+		$annotatedType = 'NULL';
 		if($this->docBlock->annotationExists('var')) {
-			$type = $this->docBlock->getFirstAnnotation('var');
-			if(ObjectMapper::isCustomType($type) && !strpos($type, '\\')) {
-				$type = $namespace . '\\' . $type;
-			}
-			$this->type = $type;
+			$annotatedType = $this->docBlock->getFirstAnnotation('var');
 		}
+		$this->type = new ModelPropertyType($propertyType, $annotatedType, $namespace);
 
 		$this->isRequired = false;
 		if($this->docBlock->annotationExists('required')) {
@@ -96,5 +100,18 @@ class ModelPropertyData {
 	 */
 	public function getPropertyValue() {
 		return $this->property->getValue($this->object);
+	}
+
+	/**
+	 * Returns the given property name, or @name value, if set
+	 * @return string
+	 */
+	public function getName() {
+		$name = $this->propertyName;
+		if(!empty($this->annotatedName)) {
+			$name = $this->annotatedName;
+		}
+
+		return $name;
 	}
 }

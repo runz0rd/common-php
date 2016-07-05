@@ -17,7 +17,7 @@ class ConvertibleTraitTest extends \PHPUnit_Framework_TestCase {
 		/** @var MapperModel|MapperModelWithRoot $model */
 		$actualArray = $model->toArray();
 
-		$this->assertEquals(json_encode($expectedArray), json_encode($actualArray));
+		$this->assertEquals($expectedArray, $actualArray);
 	}
 
 	/**

@@ -7,8 +7,9 @@
  */
 
 namespace Common\Mapper;
-use Common\Models\ModelClassData;
-use Common\Models\ModelPropertyData;
+use Common\Models\ModelClass;
+use Common\Models\ModelProperty;
+use Common\Models\ModelPropertyType;
 
 class ObjectMapper {
 
@@ -23,14 +24,14 @@ class ObjectMapper {
 		if(self::isObjectEmpty($sourceObject)) {
 			throw new \InvalidArgumentException('Invalid object(s) supplied for mapping.');
 		}
-		$modelClassData = new ModelClassData($customObject);
+		$modelClass = new ModelClass($customObject);
 
-		if(self::hasRoot($sourceObject, $modelClassData->rootName)) {
-			$sourceObject = $sourceObject->{$modelClassData->rootName};
+		if(self::hasRoot($sourceObject, $modelClass->rootName)) {
+			$sourceObject = $sourceObject->{$modelClass->rootName};
 		}
 
-		foreach($modelClassData->properties as $property) {
-			$sourcePropertyValue = $this->findObjectValue($property, $sourceObject);
+		foreach($modelClass->properties as $property) {
+			$sourcePropertyValue = $this->findObjectValueByName($property, $sourceObject);
 
 			$mappedPropertyValue = $this->mapValueByType($property->type, $sourcePropertyValue);
 			$property->setPropertyValue($mappedPropertyValue);
@@ -49,10 +50,10 @@ class ObjectMapper {
 			throw new ObjectMapperException('Invalid object supplied for unmapping.');
 		}
 
-		$modelClassData = new ModelClassData($customObject);
+		$modelClass = new ModelClass($customObject);
 		$unmappedObject = new \stdClass();
-		foreach($modelClassData->properties as $property) {
-			$propertyKey = $property->name;
+		foreach($modelClass->properties as $property) {
+			$propertyKey = $property->getName();
 			$propertyValue = $property->getPropertyValue();
 			if(empty($propertyValue)) {
 				continue;
@@ -60,8 +61,8 @@ class ObjectMapper {
 			$unmappedObject->$propertyKey = $this->unmapValueByType($property->type, $propertyValue);
 		}
 
-		if(!empty($modelClassData->rootName)) {
-			$unmappedObject = $this->addRootElement($unmappedObject, $modelClassData->rootName);
+		if(!empty($modelClass->rootName)) {
+			$unmappedObject = $this->addRootElement($unmappedObject, $modelClass->rootName);
 		}
 
 		return $unmappedObject;
@@ -75,12 +76,12 @@ class ObjectMapper {
 	}
 
 	/**
-	 * @param string $type
+	 * @param ModelPropertyType $type
 	 * @param mixed $value
 	 * @return array|mixed|object
 	 * @throws ObjectMapperException
 	 */
-	protected function mapValueByType(string $type, $value) {
+	protected function mapValueByType(ModelPropertyType $type, $value) {
 		switch(gettype($value)) {
 			case 'object':
 				$mappedValue = $this->mapObjectValue($type, $value);
@@ -104,44 +105,50 @@ class ObjectMapper {
 	}
 
 	/**
-	 * @param string $type
+	 * @param ModelPropertyType $type
 	 * @param object $value
 	 * @return object
 	 */
-	protected function mapObjectValue(string $type, $value) {
+	protected function mapObjectValue(ModelPropertyType $type, $value) {
 		$mappedValue = $value;
-		if(self::isCustomType($type)) {
-			$customTypeObject = new $type();
-			$mappedValue = $this->map($value, $customTypeObject);
+		if($type->isCustomType) {
+			$customClassName = $type->getCustomClassName();
+			$customClass = new $customClassName();
+			$mappedValue = $this->map($value, $customClass);
 		}
 
 		return $mappedValue;
 	}
 
 	/**
-	 * @param string $type
+	 * @param ModelPropertyType $type
 	 * @param array $value
 	 * @return array
 	 * @throws ObjectMapperException
 	 */
-	protected function mapArrayValue(string $type, array $value) {
-		$mappedValue = [];
-		if(strpos($type, '[]')) {
-			$type = rtrim($type, '[]');
+	protected function mapArrayValue(ModelPropertyType $type, array $value) {
+		if(strpos($type->annotatedType, '[]')) {
+			$arrayType = rtrim($type->annotatedType, '[]');
 		}
+
+		$mappedValue = [];
 		foreach($value as $key => $val) {
-			$mappedValue[$key] = $this->mapValueByType($type, $val);
+			if(empty($arrayType)) {
+				$arrayType = gettype($val);
+			}
+			$newType = new ModelPropertyType(gettype($value), $arrayType, $type->namespace);
+			$mappedValue[$key] = $this->mapValueByType($newType, $val);
 		}
 
 		return $mappedValue;
 	}
 
 	/**
-	 * @param string $type
+	 * @param ModelPropertyType $type
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	protected function unmapValueByType(string $type, $value) {
+	protected function unmapValueByType(ModelPropertyType $type, $value) {
 		switch(gettype($value)) {
 			case 'object':
 				$unmappedValue = $this->unmapObjectValue($type, $value);
@@ -158,14 +165,14 @@ class ObjectMapper {
 	}
 
 	/**
-	 * @param string $type
+	 * @param ModelPropertyType $type
 	 * @param object $value
 	 * @return object
 	 * @throws ObjectMapperException
 	 */
-	protected function unmapObjectValue(string $type, $value) {
+	protected function unmapObjectValue(ModelPropertyType $type, $value) {
 		$unmappedValue = $value;
-		if(self::isCustomType($type)) {
+		if($type->isCustomType) {
 			$unmappedValue = $this->unmap($value);
 		}
 
@@ -173,50 +180,43 @@ class ObjectMapper {
 	}
 
 	/**
-	 * @param string $type
+	 * @param ModelPropertyType $type
 	 * @param array $value
 	 * @return array
 	 */
-	protected function unmapArrayValue(string $type, array $value) {
-		$mappedValue = [];
-		if(strpos($type, '[]')) {
-			$type = rtrim($type, '[]');
-		}
-		foreach($value as $key => $val) {
-			$mappedValue[$key] = $this->unmapValueByType($type, $val);
+	protected function unmapArrayValue(ModelPropertyType $type, array $value) {
+		if(strpos($type->annotatedType, '[]')) {
+			$arrayType = rtrim($type->annotatedType, '[]');
 		}
 
-		return $mappedValue;
+		$unmappedValue = [];
+		foreach($value as $key => $val) {
+			if(empty($arrayType)) {
+				$arrayType = gettype($val);
+			}
+			$newType = new ModelPropertyType(gettype($value), $arrayType, $type->namespace);
+			$unmappedValue[$key] = $this->unmapValueByType($newType, $val);
+		}
+
+		return $unmappedValue;
 	}
 
 	/**
-	 * @param ModelPropertyData $ModelPropertyData
+	 * Takes default model value if any set
+	 * @param ModelProperty $ModelProperty
 	 * @param $sourceObject
 	 * @return object|null
 	 */
-	protected function findObjectValue(ModelPropertyData $ModelPropertyData, $sourceObject) {
-		$objectValue = null;
+	protected function findObjectValueByName(ModelProperty $ModelProperty, $sourceObject) {
+		$objectValue = $ModelProperty->getPropertyValue();
 		foreach($sourceObject as $key => $value) {
-			if($ModelPropertyData->name == $key) {
+			if($ModelProperty->getName() == $key) {
 				$objectValue = $value;
 				break;
 			}
 		}
 
 		return $objectValue;
-	}
-
-	public static function isCustomType($type) {
-		$result = true;
-		$simpleTypes = ['boolean', 'integer', 'double', 'string', 'array', 'object'];
-		foreach($simpleTypes as $simpleType) {
-			if($type == $simpleType) {
-				$result = false;
-				break;
-			}
-		}
-
-		return $result;
 	}
 
 	/**
