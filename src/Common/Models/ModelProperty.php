@@ -7,39 +7,38 @@
  */
 
 namespace Common\Models;
-use Common\Mapper\ObjectMapper;
 
 class ModelProperty {
 
 	/**
 	 * @var string
 	 */
-	public $className;
+	private $className;
 
 	/**
 	 * @var string
 	 */
-	public $propertyName;
+	private $propertyName;
 
 	/**
 	 * @var ModelPropertyType
 	 */
-	public $type;
+	private $type;
 
 	/**
 	 * @var string
 	 */
-	public $annotatedName;
+	private $annotatedName;
 
 	/**
 	 * @var bool
 	 */
-	public $isRequired;
+	private $isRequired;
 
 	/**
 	 * @var array
 	 */
-	public $requiredTypes;
+	private $requiredTypes;
 
 	/**
 	 * @var \ReflectionProperty
@@ -54,7 +53,7 @@ class ModelProperty {
 	/**
 	 * @var DocBlock
 	 */
-	public $docBlock;
+	private $docBlock;
 
 	/**
 	 * ModelPropertyData constructor.
@@ -113,5 +112,77 @@ class ModelProperty {
 		}
 
 		return $name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getClassName()
+	{
+		return $this->className;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPropertyName()
+	{
+		return $this->propertyName;
+	}
+
+	/**
+	 * @return ModelPropertyType
+	 */
+	public function getType()
+	{
+		return $this->type;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAnnotatedName()
+	{
+		return $this->annotatedName;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isRequired()
+	{
+		return $this->isRequired;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRequiredTypes()
+	{
+		return $this->requiredTypes;
+	}
+
+	/**
+	 * @return \ReflectionProperty
+	 */
+	public function getProperty()
+	{
+		return $this->property;
+	}
+
+	/**
+	 * @return object
+	 */
+	public function getObject()
+	{
+		return $this->object;
+	}
+
+	/**
+	 * @return DocBlock
+	 */
+	public function getDocBlock()
+	{
+		return $this->docBlock;
 	}
 }

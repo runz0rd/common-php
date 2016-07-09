@@ -13,27 +13,27 @@ class ModelClass {
 	/**
 	 * @var string
 	 */
-	public $className;
+	private $className;
 
 	/**
 	 * @var string
 	 */
-	public $namespace;
+	private $namespace;
 
 	/**
 	 * @var string
 	 */
-	public $rootName;
+	private $rootName;
 
 	/**
 	 * @var ModelProperty[]
 	 */
-	public $properties;
+	private $properties;
 
 	/**
 	 * @var DocBlock
 	 */
-	public $docBlock;
+	private $docBlock;
 
 	/**
 	 * ModelClassData constructor.
@@ -52,7 +52,50 @@ class ModelClass {
 
 		$properties = $reflectionClass->getProperties();
 		foreach($properties as $property) {
-			$this->properties[] = new ModelProperty($property, $customObject, $this->namespace);
+			$modelProperty = new ModelProperty($property, $customObject, $this->namespace);
+			if(!$modelProperty->getDocBlock()->annotationExists('internal')) {
+				$this->properties[] = $modelProperty;
+			}
 		}
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getClassName()
+	{
+		return $this->className;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getNamespace()
+	{
+		return $this->namespace;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRootName()
+	{
+		return $this->rootName;
+	}
+
+	/**
+	 * @return ModelProperty[]
+	 */
+	public function getProperties()
+	{
+		return $this->properties;
+	}
+
+	/**
+	 * @return DocBlock
+	 */
+	public function getDocBlock()
+	{
+		return $this->docBlock;
 	}
 }

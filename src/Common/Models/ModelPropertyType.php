@@ -14,27 +14,27 @@ class ModelPropertyType {
 	/**
 	 * @var string
 	 */
-	public $propertyType;
+	private $propertyType;
 
 	/**
 	 * @var string
 	 */
-	public $annotatedType;
+	private $annotatedType;
 
 	/**
 	 * @var bool
 	 */
-	public $isCustomType = false;
+	private $isModel = false;
 
 	/**
 	 * @var string
 	 */
-	public $actualType;
+	private $actualType;
 
 	/**
 	 * @var string
 	 */
-	public $namespace;
+	private $namespace;
 
 	public function __construct(string $propertyType, string $annotatedType, string $namespace) {
 		$this->propertyType = $propertyType;
@@ -43,7 +43,7 @@ class ModelPropertyType {
 
 		$this->actualType = $this->annotatedType;
 		if(self::isCustomType($this->annotatedType)) {
-			$this->isCustomType = true;
+			$this->isModel = true;
 			$this->actualType = 'object';
 		}
 		if(strpos($this->annotatedType, '[]')) {
@@ -73,8 +73,8 @@ class ModelPropertyType {
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function getCustomClassName() {
-		if(!$this->isCustomType) {
+	public function getModelClassName() {
+		if(!$this->isModel) {
 			throw new \Exception('Property type is not custom.');
 		}
 		$customType = $this->annotatedType;
@@ -87,5 +87,45 @@ class ModelPropertyType {
 		$className = $this->namespace . $customType;
 
 		return $className;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPropertyType()
+	{
+		return $this->propertyType;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAnnotatedType()
+	{
+		return $this->annotatedType;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isModel()
+	{
+		return $this->isModel;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getActualType()
+	{
+		return $this->actualType;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getNamespace()
+	{
+		return $this->namespace;
 	}
 }
