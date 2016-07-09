@@ -91,7 +91,7 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 		$nestedModel->testArray[] = $obj;
 		$nestedModel->testArray[] = 'testVal4';
 		$nestedModel->testArray[] = 'testVal5';
-		$nestedModel->testObjectArray = ['a'];
+		$nestedModel->testObjectArray = null;
 		$expectedModel->testObjectArray[] = $nestedModel;
 		$expectedModel->testObjectArray[] = $nestedModel;
 		$expectedModel->testObjectArray[] = $nestedModel;
@@ -112,15 +112,15 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 		$nestedModelWithRoot->testArray[] = $obj;
 		$nestedModelWithRoot->testArray[] = 'testVal4';
 		$nestedModelWithRoot->testArray[] = 'testVal5';
-		$nestedModelWithRoot->testObjectArray = ['a'];
+		$nestedModelWithRoot->testObjectArray = null;
 		$expectedModelWithRoot->testObjectArray[] = $nestedModelWithRoot;
 		$expectedModelWithRoot->testObjectArray[] = $nestedModelWithRoot;
 		$expectedModelWithRoot->testObjectArray[] = $nestedModelWithRoot;
 
-		$nestedJson = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":["a"]}';
+		$nestedJson = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":null}';
 		$jsonInput = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":['.$nestedJson.','.$nestedJson.','.$nestedJson.']}';
 
-		$nestedJson = '{"my_fancy_root":{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":["a"]}}';
+		$nestedJson = '{"my_fancy_root":{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":""}}';
 		$jsonInputWithRoot = '{"my_fancy_root":{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":['.$nestedJson.','.$nestedJson.','.$nestedJson.']}}';
 
 		return [
