@@ -33,10 +33,10 @@ class ObjectValidator {
 			throw new \InvalidArgumentException('Invalid object supplied for validation.');
 		}
 		$modelClass = new ModelClass($object);
-		$this->className = $modelClass->className;
+		$this->className = $modelClass->getClassName();
 
-		foreach($modelClass->properties as $property) {
-			$this->propertyName = $property->propertyName;
+		foreach($modelClass->getProperties() as $property) {
+			$this->propertyName = $property->getPropertyName();
 			$this->validateProperty($property, $validationRequiredType);
 		}
 	}
@@ -46,12 +46,12 @@ class ObjectValidator {
 	 * @param string $requiredType
 	 */
 	protected function validateProperty(ModelProperty $property, string $requiredType) {
-		if($property->isRequired) {
+		if($property->isRequired()) {
 			$this->validateRequiredProperty($property, $requiredType);
 		}
 		$this->validatePropertyType($property, $requiredType);
 
-		if($property->type->isCustomType) {
+		if($property->getType()->isModel()) {
 			$this->validateCustomTypeValue($property, $requiredType);
 		}
 	}
@@ -65,11 +65,13 @@ class ObjectValidator {
 		if(!empty($propertyValue)) {
 			if(is_array($propertyValue)) {
 				foreach ($propertyValue as $value) {
-					$this->validate($value);
+					$validator = new ObjectValidator();
+					$validator->validate($value);
 				}
 			}
 			if(is_object($propertyValue)) {
-				$this->validate($propertyValue);
+				$validator = new ObjectValidator();
+				$validator->validate($propertyValue);
 			}
 		}
 	}
@@ -80,13 +82,13 @@ class ObjectValidator {
 	 * @throws ObjectValidatorException
 	 */
 	protected function validatePropertyType(ModelProperty $property, string $requiredType) {
-		$expectedType = $property->type->actualType;
+		$expectedType = $property->getType()->getActualType();
 		$actualType = gettype($property->getPropertyValue());
 
-		if(!$property->isRequired && $actualType != 'NULL') {
+		if(!$property->isRequired() && $actualType != 'NULL') {
 			$this->assertPropertyType($expectedType, $actualType);
 		}
-		if($property->isRequired && array_search($requiredType, $property->requiredTypes) !== false) {
+		if($property->isRequired() && array_search($requiredType, $property->getRequiredTypes()) !== false) {
 			$this->assertPropertyType($expectedType, $actualType);
 		}
 	}
@@ -97,10 +99,10 @@ class ObjectValidator {
 	 * @throws ObjectValidatorException
 	 */
 	protected function validateRequiredProperty(ModelProperty $property, string $requiredType) {
-		$expectedRequired = $property->isRequired;
+		$expectedRequired = $property->isRequired();
 		$actualRequired = !empty($property->getPropertyValue());
 
-		foreach($property->requiredTypes as $expectedRequiredType) {
+		foreach($property->getRequiredTypes() as $expectedRequiredType) {
 			if(($expectedRequiredType == '' || $requiredType == '') || $expectedRequiredType == $requiredType) {
 				$this->assertRequiredProperty($expectedRequired, $actualRequired, $property);
 			}
@@ -126,7 +128,7 @@ class ObjectValidator {
 	 */
 	protected function assertRequiredProperty(bool $expected, bool $actual, ModelProperty $propertyData) {
 		if($expected != $actual) {
-			throw new ObjectValidatorException('Required property ' . $propertyData->className . '::' . $propertyData->propertyName . ' not set.');
+			throw new ObjectValidatorException('Required property ' . $propertyData->getClassName() . '::' . $propertyData->getPropertyName() . ' not set.');
 		}
 	}
 }
