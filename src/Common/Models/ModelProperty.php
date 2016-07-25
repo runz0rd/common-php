@@ -7,6 +7,7 @@
  */
 
 namespace Common\Models;
+use Common\Validator\ObjectValidator;
 
 class ModelProperty {
 
@@ -107,7 +108,7 @@ class ModelProperty {
 	 */
 	public function getName() {
 		$name = $this->propertyName;
-		if(!empty($this->annotatedName)) {
+		if(!ObjectValidator::isValueEmpty($this->annotatedName)) {
 			$name = $this->annotatedName;
 		}
 

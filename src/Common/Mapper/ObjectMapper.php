@@ -9,6 +9,7 @@
 namespace Common\Mapper;
 use Common\Models\ModelClass;
 use Common\Models\ModelPropertyType;
+use Common\Validator\ObjectValidator;
 
 class ObjectMapper implements IModelMapper {
 
@@ -22,9 +23,6 @@ class ObjectMapper implements IModelMapper {
 	public function map($source, $model) {
 		if(!is_object($source)) {
 			throw new \InvalidArgumentException('Source must be an object.');
-		}
-		if(self::isObjectEmpty($source)) {
-			throw new \InvalidArgumentException('Empty object supplied for mapping.');
 		}
 		$modelClass = new ModelClass($model);
 
@@ -100,22 +98,19 @@ class ObjectMapper implements IModelMapper {
 		if(!is_object($model)) {
 			throw new \InvalidArgumentException('Model must be an object.');
 		}
-		if(self::isObjectEmpty($model)) {
-			throw new \InvalidArgumentException('Empty object supplied for unmapping.');
-		}
 
 		$modelClass = new ModelClass($model);
 		$unmappedObject = new \stdClass();
 		foreach($modelClass->getProperties() as $property) {
 			$propertyKey = $property->getName();
 			$propertyValue = $property->getPropertyValue();
-			if(empty($propertyValue)) {
+			if(ObjectValidator::isValueEmpty($propertyValue)) {
 				continue;
 			}
 			$unmappedObject->$propertyKey = $this->unmapValueByType($property->getType(), $propertyValue);
 		}
 
-		if(!empty($modelClass->getRootName())) {
+		if(!ObjectValidator::isValueEmpty($modelClass->getRootName())) {
 			$unmappedObject = $this->addRootElement($unmappedObject, $modelClass->getRootName());
 		}
 
@@ -205,30 +200,13 @@ class ObjectMapper implements IModelMapper {
 	 */
 	protected static function hasRoot($sourceObject, string $rootName) {
 		$hasRoot = false;
-		if(!empty($rootName) && isset($sourceObject->$rootName)) {
+		if(!ObjectValidator::isValueEmpty($rootName) && isset($sourceObject->$rootName)) {
 			$hasRoot = true;
 		}
-		if(!empty($rootName) && !isset($sourceObject->$rootName)) {
+		if(!ObjectValidator::isValueEmpty($rootName) && !isset($sourceObject->$rootName)) {
 			throw new ObjectMapperException('The source object has no ' . $rootName . ' root defined.');
 		}
 
 		return $hasRoot;
-	}
-
-	/**
-	 * @param object $object
-	 * @return bool
-	 */
-	public static function isObjectEmpty($object) {
-		$isEmpty = true;
-		$array = (array) $object;
-		foreach($array as $value) {
-			if (!empty($value)) {
-				$isEmpty = false;
-				break;
-			}
-		}
-
-		return $isEmpty;
 	}
 }

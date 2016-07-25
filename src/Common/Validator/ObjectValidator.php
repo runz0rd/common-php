@@ -62,7 +62,7 @@ class ObjectValidator {
 	 */
 	protected function validateCustomTypeValue(ModelProperty $property, string $requiredType) {
 		$propertyValue = $property->getPropertyValue();
-		if(!empty($propertyValue)) {
+		if(!self::isValueEmpty($propertyValue)) {
 			if(is_array($propertyValue)) {
 				foreach ($propertyValue as $value) {
 					$validator = new ObjectValidator();
@@ -100,7 +100,7 @@ class ObjectValidator {
 	 */
 	protected function validateRequiredProperty(ModelProperty $property, string $requiredType) {
 		$expectedRequired = $property->isRequired();
-		$actualRequired = !empty($property->getPropertyValue());
+		$actualRequired = !self::isValueEmpty($property->getPropertyValue());
 
 		foreach($property->getRequiredTypes() as $expectedRequiredType) {
 			if(($expectedRequiredType == '' || $requiredType == '') || $expectedRequiredType == $requiredType) {
@@ -130,5 +130,18 @@ class ObjectValidator {
 		if($expected != $actual) {
 			throw new ObjectValidatorException('Required property ' . $propertyData->getClassName() . '::' . $propertyData->getPropertyName() . ' not set.');
 		}
+	}
+
+	/**
+	 * @param mixed $value
+	 * @return bool
+	 */
+	public static function isValueEmpty($value) {
+		$isEmpty = false;
+		if($value === array() || is_null($value) || $value === '') {
+			$isEmpty= true;
+		}
+
+		return $isEmpty;
 	}
 }
