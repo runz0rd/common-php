@@ -66,12 +66,12 @@ class ObjectValidator {
 			if(is_array($propertyValue)) {
 				foreach ($propertyValue as $value) {
 					$validator = new ObjectValidator();
-					$validator->validate($value);
+					$validator->validate($value, $requiredType);
 				}
 			}
 			if(is_object($propertyValue)) {
 				$validator = new ObjectValidator();
-				$validator->validate($propertyValue);
+				$validator->validate($propertyValue, $requiredType);
 			}
 		}
 	}
