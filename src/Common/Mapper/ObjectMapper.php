@@ -9,7 +9,7 @@
 namespace Common\Mapper;
 use Common\Models\ModelClass;
 use Common\Models\ModelPropertyType;
-use Common\Validator\ObjectValidator;
+use Common\Util\Validation;
 
 class ObjectMapper implements IModelMapper {
 
@@ -104,13 +104,13 @@ class ObjectMapper implements IModelMapper {
 		foreach($modelClass->getProperties() as $property) {
 			$propertyKey = $property->getName();
 			$propertyValue = $property->getPropertyValue();
-			if(ObjectValidator::isValueEmpty($propertyValue)) {
+			if(Validation::isEmpty($propertyValue)) {
 				continue;
 			}
 			$unmappedObject->$propertyKey = $this->unmapValueByType($property->getType(), $propertyValue);
 		}
 
-		if(!ObjectValidator::isValueEmpty($modelClass->getRootName())) {
+		if(!Validation::isEmpty($modelClass->getRootName())) {
 			$unmappedObject = $this->addRootElement($unmappedObject, $modelClass->getRootName());
 		}
 
@@ -200,10 +200,10 @@ class ObjectMapper implements IModelMapper {
 	 */
 	protected static function hasRoot($sourceObject, string $rootName) {
 		$hasRoot = false;
-		if(!ObjectValidator::isValueEmpty($rootName) && isset($sourceObject->$rootName)) {
+		if(!Validation::isEmpty($rootName) && isset($sourceObject->$rootName)) {
 			$hasRoot = true;
 		}
-		if(!ObjectValidator::isValueEmpty($rootName) && !isset($sourceObject->$rootName)) {
+		if(!Validation::isEmpty($rootName) && !isset($sourceObject->$rootName)) {
 			throw new ObjectMapperException('The source object has no ' . $rootName . ' root defined.');
 		}
 

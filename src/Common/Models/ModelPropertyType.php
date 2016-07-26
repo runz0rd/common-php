@@ -9,6 +9,8 @@
 namespace Common\Models;
 
 
+use Common\Util\Validation;
+
 class ModelPropertyType {
 
 	/**
@@ -42,31 +44,13 @@ class ModelPropertyType {
 		$this->namespace = $namespace;
 
 		$this->actualType = $this->annotatedType;
-		if(self::isCustomType($this->annotatedType)) {
+		if(Validation::isCustomType($this->annotatedType)) {
 			$this->isModel = true;
 			$this->actualType = 'object';
 		}
 		if(strpos($this->annotatedType, '[]')) {
 			$this->actualType = 'array';
 		}
-	}
-
-	/**
-	 * @param string $type
-	 * @return bool
-	 */
-	public static function isCustomType(string $type) {
-		$result = true;
-		$simpleTypes = ['boolean', 'integer', 'double', 'string', 'array', 'object',
-			'boolean[]', 'integer[]', 'double[]', 'string[]', '[]', 'object[]'];
-		foreach($simpleTypes as $simpleType) {
-			if($type == $simpleType) {
-				$result = false;
-				break;
-			}
-		}
-
-		return $result;
 	}
 
 	/**

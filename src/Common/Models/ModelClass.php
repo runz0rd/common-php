@@ -7,7 +7,7 @@
  */
 
 namespace Common\Models;
-use Common\Validator\ObjectValidator;
+use Common\Util\Validation;
 
 class ModelClass {
 
@@ -47,7 +47,7 @@ class ModelClass {
 		$this->namespace = $reflectionClass->getNamespaceName();
 
 		$this->rootName = '';
-		if($this->docBlock->annotationExists('root') && !ObjectValidator::isValueEmpty($this->docBlock->getAnnotation('root'))) {
+		if($this->docBlock->annotationExists('root') && !Validation::isEmpty($this->docBlock->getAnnotation('root'))) {
 			$this->rootName = $this->docBlock->getFirstAnnotation('root');
 		}
 

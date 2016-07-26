@@ -9,7 +9,7 @@
 namespace Common\Traits;
 use Common\Mapper\ObjectMapperException;
 use Common\Mapper\ObjectMapper;
-use Common\Validator\ObjectValidator;
+use Common\Util\Validation;
 
 trait MappableTrait {
 
@@ -41,7 +41,7 @@ trait MappableTrait {
 	 * @throws ObjectMapperException
 	 */
 	public function mapFromObject($object) {
-		if(ObjectValidator::isValueEmpty((array) $object)) {
+		if(Validation::isEmpty((array) $object)) {
 			throw new \InvalidArgumentException('Invalid json string supplied.');
 		}
 		$mapper = new ObjectMapper();
