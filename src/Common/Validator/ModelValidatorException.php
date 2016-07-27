@@ -8,6 +8,6 @@
 
 namespace Common\Validator;
 
-class ObjectValidatorException extends \Exception {
+class ModelValidatorException extends \Exception {
 
 }

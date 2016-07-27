@@ -8,6 +8,6 @@
 
 namespace Common\Mapper;
 
-class ObjectMapperException extends \Exception {
+class ModelMapperException extends \Exception {
 
 }

@@ -11,13 +11,13 @@ use Common\Models\ModelClass;
 use Common\Models\ModelPropertyType;
 use Common\Util\Validation;
 
-class ObjectMapper implements IModelMapper {
+class ModelMapper implements IModelMapper {
 
 	/**
 	 * @param object $source
 	 * @param object $model
 	 * @return object
-	 * @throws ObjectMapperException
+	 * @throws ModelMapperException
 	 * @throws \InvalidArgumentException
 	 */
 	public function map($source, $model) {
@@ -92,7 +92,7 @@ class ObjectMapper implements IModelMapper {
 	/**
 	 * @param object $model
 	 * @return \stdClass
-	 * @throws ObjectMapperException
+	 * @throws ModelMapperException
 	 */
 	public function unmap($model) {
 		if(!is_object($model)) {
@@ -196,7 +196,7 @@ class ObjectMapper implements IModelMapper {
 	 * @param object $sourceObject
 	 * @param string $rootName
 	 * @return bool
-	 * @throws ObjectMapperException
+	 * @throws ModelMapperException
 	 */
 	protected static function hasRoot($sourceObject, string $rootName) {
 		$hasRoot = false;
@@ -204,7 +204,7 @@ class ObjectMapper implements IModelMapper {
 			$hasRoot = true;
 		}
 		if(!Validation::isEmpty($rootName) && !isset($sourceObject->$rootName)) {
-			throw new ObjectMapperException('The source object has no ' . $rootName . ' root defined.');
+			throw new ModelMapperException('The source object has no ' . $rootName . ' root defined.');
 		}
 
 		return $hasRoot;

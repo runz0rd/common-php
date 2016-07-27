@@ -11,7 +11,7 @@ use Common\Models\ModelClass;
 use Common\Models\ModelProperty;
 use Common\Util\Validation;
 
-class ObjectValidator {
+class ModelValidator {
 
 	/**
 	 * @var string
@@ -26,7 +26,7 @@ class ObjectValidator {
 	/**
 	 * @param object $object
 	 * @param string $validationRequiredType
-	 * @throws ObjectValidatorException
+	 * @throws ModelValidatorException
 	 * @throws \InvalidArgumentException
 	 */
 	public function validate($object, string $validationRequiredType = '') {
@@ -66,12 +66,12 @@ class ObjectValidator {
 		if(!Validation::isEmpty($propertyValue)) {
 			if(is_array($propertyValue)) {
 				foreach ($propertyValue as $value) {
-					$validator = new ObjectValidator();
+					$validator = new ModelValidator();
 					$validator->validate($value, $requiredType);
 				}
 			}
 			if(is_object($propertyValue)) {
-				$validator = new ObjectValidator();
+				$validator = new ModelValidator();
 				$validator->validate($propertyValue, $requiredType);
 			}
 		}
@@ -80,7 +80,7 @@ class ObjectValidator {
 	/**
 	 * @param ModelProperty $property
 	 * @param string $requiredType
-	 * @throws ObjectValidatorException
+	 * @throws ModelValidatorException
 	 */
 	protected function validatePropertyType(ModelProperty $property, string $requiredType) {
 		$expectedType = $property->getType()->getActualType();
@@ -97,7 +97,7 @@ class ObjectValidator {
 	/**
 	 * @param ModelProperty $property
 	 * @param string $requiredType
-	 * @throws ObjectValidatorException
+	 * @throws ModelValidatorException
 	 */
 	protected function validateRequiredProperty(ModelProperty $property, string $requiredType) {
 		$expectedRequired = $property->isRequired();
@@ -113,11 +113,11 @@ class ObjectValidator {
 	/**
 	 * @param string $expected
 	 * @param string $actual
-	 * @throws ObjectValidatorException
+	 * @throws ModelValidatorException
 	 */
 	protected function assertPropertyType(string $expected, string $actual) {
 		if($expected != $actual) {
-			throw new ObjectValidatorException('Expecting ' . $expected . ' type but got ' . $actual . ' while validating ' . $this->className . '::' . $this->propertyName);
+			throw new ModelValidatorException('Expecting ' . $expected . ' type but got ' . $actual . ' while validating ' . $this->className . '::' . $this->propertyName);
 		}
 	}
 
@@ -125,11 +125,11 @@ class ObjectValidator {
 	 * @param bool $expected
 	 * @param bool $actual
 	 * @param ModelProperty $propertyData
-	 * @throws ObjectValidatorException
+	 * @throws ModelValidatorException
 	 */
 	protected function assertRequiredProperty(bool $expected, bool $actual, ModelProperty $propertyData) {
 		if($expected != $actual) {
-			throw new ObjectValidatorException('Required property ' . $propertyData->getClassName() . '::' . $propertyData->getPropertyName() . ' not set.');
+			throw new ModelValidatorException('Required property ' . $propertyData->getClassName() . '::' . $propertyData->getPropertyName() . ' not set.');
 		}
 	}
 }

@@ -7,7 +7,7 @@
  */
 
 namespace Common\Traits;
-use Common\Mapper\ObjectMapper;
+use Common\Mapper\ModelMapper;
 
 trait ConvertibleTrait {
 
@@ -31,7 +31,7 @@ trait ConvertibleTrait {
 	 * @throws \InvalidArgumentException
 	 */
 	public function toJson() {
-		$mapper = new ObjectMapper();
+		$mapper = new ModelMapper();
 		$unmappedObject = $mapper->unmap($this);
 		$json = json_encode($unmappedObject);
 

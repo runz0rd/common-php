@@ -6,17 +6,17 @@
  * Date: 6/1/2016
  * Time: 11:23 PM
  */
-use Common\Mapper\ObjectMapper;
+use Common\Mapper\ModelMapper;
 
-class ObjectMapperTest extends \PHPUnit_Framework_TestCase {
+class ModelMapperTest extends \PHPUnit_Framework_TestCase {
 
 	/**
-	 * @var ObjectMapper
+	 * @var ModelMapper
 	 */
-	public $objectMapper;
+	public $ModelMapper;
 
 	public function setUp() {
-		$this->objectMapper = new ObjectMapper();
+		$this->ModelMapper = new ModelMapper();
 		parent::setUp();
 	}
 
@@ -30,16 +30,16 @@ class ObjectMapperTest extends \PHPUnit_Framework_TestCase {
 		$model->testArray[] = 'testVal5';
 
 		$json = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{},"testVal4","testVal5"]}';
-		$preparedObject = $this->objectMapper->unmap($model);
+		$preparedObject = $this->ModelMapper->unmap($model);
 
 		$this->assertEquals($json, json_encode($preparedObject));
 	}
 
 	public function testMap() {
 		$json = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{},"testVal4","testVal5"]}';
-		$mappedModel = $this->objectMapper->map(json_decode($json), new MapperModel());
+		$mappedModel = $this->ModelMapper->map(json_decode($json), new MapperModel());
 
-		$preparedObject = $this->objectMapper->unmap($mappedModel);
+		$preparedObject = $this->ModelMapper->unmap($mappedModel);
 
 		$this->assertEquals($json, json_encode($preparedObject));
 	}

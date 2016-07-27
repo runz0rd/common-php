@@ -8,7 +8,7 @@
 
 namespace Common\Traits;
 
-use Common\Validator\ObjectValidator;
+use Common\Validator\ModelValidator;
 
 trait ValidatableTrait {
 
@@ -16,7 +16,7 @@ trait ValidatableTrait {
 	 * @param string $validationType
 	 */
 	public function validate(string $validationType = '') {
-		$validator = new ObjectValidator();
+		$validator = new ModelValidator();
 		$validator->validate($this, $validationType);
 	}
 }
