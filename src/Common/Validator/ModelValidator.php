@@ -104,7 +104,7 @@ class ModelValidator {
 		$actualRequired = !Validation::isEmpty($property->getPropertyValue());
 
 		foreach($property->getRequiredTypes() as $expectedRequiredType) {
-			if(($expectedRequiredType == '' || $requiredType == '') || $expectedRequiredType == $requiredType) {
+			if($expectedRequiredType == $requiredType || ($expectedRequiredType == '' || $requiredType == '')) {
 				$this->assertRequiredProperty($expectedRequired, $actualRequired, $property);
 			}
 		}
