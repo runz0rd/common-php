@@ -14,16 +14,6 @@ use Common\Util\Validation;
 class ModelValidator {
 
 	/**
-	 * @var string
-	 */
-	protected $className;
-
-	/**
-	 * @var string
-	 */
-	protected $propertyName;
-
-	/**
 	 * @param object $object
 	 * @param string $validationRequiredType
 	 * @throws ModelValidatorException
@@ -33,11 +23,9 @@ class ModelValidator {
 		if(!is_object($object)) {
 			throw new \InvalidArgumentException('Invalid object supplied for validation.');
 		}
-		$modelClass = new ModelClass($object);
-		$this->className = $modelClass->getClassName();
 
+		$modelClass = new ModelClass($object);
 		foreach($modelClass->getProperties() as $property) {
-			$this->propertyName = $property->getPropertyName();
 			$this->validateProperty($property, $validationRequiredType);
 		}
 	}
@@ -53,27 +41,24 @@ class ModelValidator {
 		$this->validatePropertyType($property, $requiredType);
 
 		if($property->getType()->isModel()) {
-			$this->validateCustomTypeValue($property, $requiredType);
+		    $this->validateModelProperty($property->getPropertyValue(), $requiredType);
 		}
 	}
 
 	/**
-	 * @param ModelProperty $property
+	 * @param array|object $propertyValue
 	 * @param string $requiredType
 	 */
-	protected function validateCustomTypeValue(ModelProperty $property, string $requiredType) {
-		$propertyValue = $property->getPropertyValue();
+	protected function validateModelProperty($propertyValue, string $requiredType) {
 		if(!Validation::isEmpty($propertyValue)) {
-			if(is_array($propertyValue)) {
-				foreach ($propertyValue as $value) {
-					$validator = new ModelValidator();
-					$validator->validate($value, $requiredType);
-				}
-			}
-			if(is_object($propertyValue)) {
-				$validator = new ModelValidator();
-				$validator->validate($propertyValue, $requiredType);
-			}
+            if(is_array($propertyValue)) {
+                foreach($propertyValue as $value) {
+                    $this->validate($value, $requiredType);
+                }
+            }
+            if(is_object($propertyValue)) {
+                $this->validate($propertyValue, $requiredType);
+            }
 		}
 	}
 
@@ -87,10 +72,10 @@ class ModelValidator {
 		$actualType = gettype($property->getPropertyValue());
 
 		if(!$property->isRequired() && $actualType != 'NULL') {
-			$this->assertPropertyType($expectedType, $actualType);
+			$this->assertPropertyType($expectedType, $actualType, $property);
 		}
 		if($property->isRequired() && array_search($requiredType, $property->getRequiredTypes()) !== false) {
-			$this->assertPropertyType($expectedType, $actualType);
+			$this->assertPropertyType($expectedType, $actualType, $property);
 		}
 	}
 
@@ -110,14 +95,15 @@ class ModelValidator {
 		}
 	}
 
-	/**
-	 * @param string $expected
-	 * @param string $actual
-	 * @throws ModelValidatorException
-	 */
-	protected function assertPropertyType(string $expected, string $actual) {
+    /**
+     * @param string $expected
+     * @param string $actual
+     * @param ModelProperty $propertyData
+     * @throws ModelValidatorException
+     */
+	protected function assertPropertyType(string $expected, string $actual, ModelProperty $propertyData) {
 		if($expected != $actual) {
-			throw new ModelValidatorException('Expecting ' . $expected . ' type but got ' . $actual . ' while validating ' . $this->className . '::' . $this->propertyName);
+			throw new ModelValidatorException('Expecting ' . $expected . ' type but got ' . $actual . ' while validating ' . $propertyData->getClassName() . '::' . $propertyData->getPropertyName());
 		}
 	}
 

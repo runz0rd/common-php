@@ -10,6 +10,7 @@ namespace Common\Mapper;
 use Common\Models\ModelClass;
 use Common\Models\ModelPropertyType;
 use Common\Util\Validation;
+use Common\Util\Iteration;
 
 class ModelMapper implements IModelMapper {
 
@@ -17,21 +18,24 @@ class ModelMapper implements IModelMapper {
 	 * @param object $source
 	 * @param object $model
 	 * @return object
-	 * @throws ModelMapperException
 	 * @throws \InvalidArgumentException
 	 */
 	public function map($source, $model) {
-		if(!is_object($source)) {
-			throw new \InvalidArgumentException('Source must be an object.');
+		if(!is_object($source) || Validation::isEmpty($source)) {
+			throw new \InvalidArgumentException('Source must be an object with properties.');
 		}
+        if(!is_object($model) || Validation::isEmpty($model)) {
+            throw new \InvalidArgumentException('Model must be an object with properties.');
+        }
 		$modelClass = new ModelClass($model);
 
-		if(self::hasRoot($source, $modelClass->getRootName())) {
+        $rootName = $modelClass->getRootName();
+		if(Validation::hasRoot($source, $rootName)) {
 			$source = $source->{$modelClass->getRootName()};
 		}
 
 		foreach($modelClass->getProperties() as $property) {
-			$sourceValue = $this->findSourceValueByName($property->getName(), $source, $property->getPropertyValue());
+			$sourceValue = Iteration::findValueByName($property->getName(), $source, $property->getPropertyValue());
 			$mappedValue = $this->mapValueByType($property->getType(), $sourceValue);
 			$property->setPropertyValue($mappedValue);
 		}
@@ -82,7 +86,7 @@ class ModelMapper implements IModelMapper {
 	 * @param object $source
 	 * @return object
 	 */
-	protected function mapModel(string $modelClassName, $source) {
+    protected function mapModel(string $modelClassName, $source) {
 		$model = new $modelClassName();
 		$mappedModel = $this->map($source, $model);
 
@@ -92,11 +96,11 @@ class ModelMapper implements IModelMapper {
 	/**
 	 * @param object $model
 	 * @return \stdClass
-	 * @throws ModelMapperException
+	 * @throws \InvalidArgumentException
 	 */
 	public function unmap($model) {
-		if(!is_object($model)) {
-			throw new \InvalidArgumentException('Model must be an object.');
+		if(!is_object($model) || Validation::isEmpty($model)) {
+			throw new \InvalidArgumentException('Model must be an object with properties.');
 		}
 
 		$modelClass = new ModelClass($model);
@@ -171,42 +175,5 @@ class ModelMapper implements IModelMapper {
 		$newObject->$rootName = $object;
 
 		return $newObject;
-	}
-
-	/**
-	 * Takes default model value if any set
-	 * @param string $name
-	 * @param object|array $source
-	 * @param mixed $defaultValue
-	 * @return mixed
-	 */
-	protected function findSourceValueByName(string $name, $source, $defaultValue) {
-		$sourceValue = $defaultValue;
-		foreach($source as $key => $value) {
-			if($name == $key) {
-				$sourceValue = $value;
-				break;
-			}
-		}
-
-		return $sourceValue;
-	}
-
-	/**
-	 * @param object $sourceObject
-	 * @param string $rootName
-	 * @return bool
-	 * @throws ModelMapperException
-	 */
-	protected static function hasRoot($sourceObject, string $rootName) {
-		$hasRoot = false;
-		if(!Validation::isEmpty($rootName) && isset($sourceObject->$rootName)) {
-			$hasRoot = true;
-		}
-		if(!Validation::isEmpty($rootName) && !isset($sourceObject->$rootName)) {
-			throw new ModelMapperException('The source object has no ' . $rootName . ' root defined.');
-		}
-
-		return $hasRoot;
 	}
 }

@@ -46,4 +46,23 @@ class Validation {
 
 		return $result;
 	}
+
+    /**
+     * Checks if the given source has a property
+     * @param object $source
+     * @param string $propertyName
+     * @return bool
+     */
+    public static function hasProperty($source, string $propertyName) {
+        if(!is_object($source)) {
+            throw new \InvalidArgumentException('The source must be an object with accessible properties.');
+        }
+
+        $hasProperty = false;
+        if(!Validation::isEmpty($propertyName) && isset($source->$propertyName)) {
+            $hasProperty = true;
+        }
+
+        return $hasProperty;
+    }
 }
