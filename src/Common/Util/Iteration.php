@@ -25,7 +25,7 @@ class Iteration {
         }
         $sourceValue = $defaultValue;
         foreach($source as $key => $value) {
-            if($name == $key) {
+            if($name == $key && !Validation::isEmpty($value)) {
                 $sourceValue = $value;
                 break;
             }

@@ -30,7 +30,7 @@ class ModelMapper implements IModelMapper {
 		$modelClass = new ModelClass($model);
 
         $rootName = $modelClass->getRootName();
-		if(Validation::hasRoot($source, $rootName)) {
+		if(Validation::hasProperty($source, $rootName)) {
 			$source = $source->{$modelClass->getRootName()};
 		}
 
