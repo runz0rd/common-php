@@ -9,131 +9,138 @@
 
 class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 
-	/**
-	 * @dataProvider validValues
+    /**
+     * @var TestModel
+     */
+    public $model;
+
+    /**
+     * @var TestModel
+     */
+    public $expectedModel;
+
+    public function setUp() {
+        $this->model = new TestModel();
+
+        $object = new stdClass();
+        $object->a = 1;
+
+        $this->expectedModel = new TestModel();
+        $this->expectedModel->noType = null;
+        $this->expectedModel->boolTrue = true;
+        $this->expectedModel->boolFalse = false;
+        $this->expectedModel->string = 'a';
+        $this->expectedModel->namedString = 'named';
+        $this->expectedModel->integer = 5;
+        $this->expectedModel->array = [1,'a',3];
+        $this->expectedModel->stringArray = ['a','b','c'];
+        $this->expectedModel->integerArray = [1,2,3];
+        $this->expectedModel->booleanArray = [true,true,false];
+        $this->expectedModel->objectArray = [$object,$object,$object];
+        $this->expectedModel->object = $object;
+        $nestedModel = clone $this->expectedModel;
+        $this->expectedModel->model = $nestedModel;
+        $this->expectedModel->modelArray = [$nestedModel,$nestedModel];
+
+        parent::setUp();
+    }
+
+    /**
+	 * @dataProvider validArrays
 	 */
-	public function testMapFromArray($json, $model, $expectedModel) {
-		$array = json_decode($json, true);
-
-		/** @var MapperModel|MapperModelWithRoot $model */
-		$model->mapFromArray($array);
-
-		$this->assertEquals($expectedModel, $model);
+	public function testMapFromArray($array) {
+		$this->model->mapFromArray($array);
+		$this->assertEquals($this->expectedModel, $this->model);
 	}
 
 	/**
-	 * @dataProvider validValues
+	 * @dataProvider validJsons
 	 */
-	public function testMapFromJson($json, $model, $expectedModel) {
-		/** @var MapperModel|MapperModelWithRoot $model */
-		$model->mapFromJson($json);
-
-		$this->assertEquals($expectedModel, $model);
+	public function testMapFromJson($json) {
+		$this->model->mapFromJson($json);
+		$this->assertEquals($this->expectedModel, $this->model);
 	}
 
 	/**
-	 * @dataProvider validValues
+	 * @dataProvider validObjects
 	 */
-	public function testMapFromObject($json, $model, $expectedModel) {
-		$object = json_decode($json);
+	public function testMapFromObject($object) {
+		$this->model->mapFromObject($object);
+		$this->assertEquals($this->expectedModel, $this->model);
+	}
 
-		/** @var MapperModel|MapperModelWithRoot $model */
-		$model->mapFromObject($object);
-
-		$this->assertEquals($expectedModel, $model);
+	/**
+	 * @dataProvider invalidArrays
+	 * @expectedException Exception
+	 */
+	public function testMapFromArrayFail($array) {
+		$this->model->mapFromArray($array);
 	}
 
 	/**
 	 * @dataProvider invalidValues
 	 * @expectedException Exception
 	 */
-	public function testMapFromArrayFail($json, $model) {
-		$array = json_decode($json, true);
-
-		/** @var MapperModel|MapperModelWithRoot $model */
-		$model->mapFromArray($array);
+	public function testMapFromJsonFail($json) {
+		$this->model->mapFromJson($json);
 	}
 
 	/**
 	 * @dataProvider invalidValues
 	 * @expectedException Exception
 	 */
-	public function testMapFromJsonFail($json, $model) {
-		/** @var MapperModel|MapperModelWithRoot $model */
-		$model->mapFromJson($json);
+	public function testMapFromObjectFail($object) {
+		$this->model->mapFromObject($object);
 	}
 
-	/**
-	 * @dataProvider invalidValues
-	 * @expectedException Exception
-	 */
-	public function testMapFromObjectFail($json, $model) {
-		$object = json_decode($json);
-
-		/** @var MapperModel|MapperModelWithRoot $model */
-		$model->mapFromObject($object);
-	}
-
-	public function validValues() {
-		$obj = new stdClass();
-		$obj->asd = 'asd';
-		$expectedModel = new MapperModel();
-		$expectedModel->testProperty1 = 'testVal1';
-		$expectedModel->testProperty2 = 'testVal2';
-		$expectedModel->testProperty3 = 'testVal3';
-		$expectedModel->testArray[] = $obj;
-		$expectedModel->testArray[] = 'testVal4';
-		$expectedModel->testArray[] = 'testVal5';
-		$nestedModel = new MapperModel();
-		$nestedModel->testProperty1 = 'testVal1';
-		$nestedModel->testProperty2 = 'testVal2';
-		$nestedModel->testProperty3 = 'testVal3';
-		$nestedModel->testArray[] = $obj;
-		$nestedModel->testArray[] = 'testVal4';
-		$nestedModel->testArray[] = 'testVal5';
-		$nestedModel->testObjectArray = null;
-		$expectedModel->testObjectArray[] = $nestedModel;
-		$expectedModel->testObjectArray[] = $nestedModel;
-		$expectedModel->testObjectArray[] = $nestedModel;
-
-		$obj = new stdClass();
-		$obj->asd = 'asd';
-		$expectedModelWithRoot = new MapperModelWithRoot();
-		$expectedModelWithRoot->testProperty1 = 'testVal1';
-		$expectedModelWithRoot->testProperty2 = 'testVal2';
-		$expectedModelWithRoot->testProperty3 = 'testVal3';
-		$expectedModelWithRoot->testArray[] = $obj;
-		$expectedModelWithRoot->testArray[] = 'testVal4';
-		$expectedModelWithRoot->testArray[] = 'testVal5';
-		$nestedModelWithRoot = new MapperModelWithRoot();
-		$nestedModelWithRoot->testProperty1 = 'testVal1';
-		$nestedModelWithRoot->testProperty2 = 'testVal2';
-		$nestedModelWithRoot->testProperty3 = 'testVal3';
-		$nestedModelWithRoot->testArray[] = $obj;
-		$nestedModelWithRoot->testArray[] = 'testVal4';
-		$nestedModelWithRoot->testArray[] = 'testVal5';
-		$nestedModelWithRoot->testObjectArray = null;
-		$expectedModelWithRoot->testObjectArray[] = $nestedModelWithRoot;
-		$expectedModelWithRoot->testObjectArray[] = $nestedModelWithRoot;
-		$expectedModelWithRoot->testObjectArray[] = $nestedModelWithRoot;
-
-		$nestedJson = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":null}';
-		$jsonInput = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":['.$nestedJson.','.$nestedJson.','.$nestedJson.']}';
-
-		$nestedJson = '{"my_fancy_root":{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":""}}';
-		$jsonInputWithRoot = '{"my_fancy_root":{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"],"testObjectArray":['.$nestedJson.','.$nestedJson.','.$nestedJson.']}}';
+	public function validArrays() {
+        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
+        $validJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
+	    $validArray = json_decode($validJson);
 
 		return [
-			[$jsonInput, new MapperModel(), $expectedModel],
-			[$jsonInputWithRoot, new MapperModelWithRoot(), $expectedModelWithRoot]
+			[$validArray]
 		];
 	}
 
-	public function invalidValues() {
-		return [
-			['{}', new MapperModel()],
-			['{"unexpected_root":{"testProperty1":"testVal1","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"]}}', new MapperModelWithRoot()],
-			['{"testProperty1":"testVal1","normalName":"testVal3","testArray":[{"asd":"asd"},"testVal4","testVal5"]}', new MapperModelWithRoot()],
-		];
-	}
+    public function validJsons() {
+        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
+        $validJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
+
+        return [
+            [$validJson]
+        ];
+    }
+
+    public function validObjects() {
+        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
+        $validJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
+        $validObject = json_decode($validJson);
+
+        return [
+            [$validObject]
+        ];
+    }
+
+    public function invalidArrays() {
+        return [
+            [[]],
+            [[]]
+        ];
+    }
+
+    public function invalidJsons() {
+        return [
+            [''],
+            ['']
+        ];
+    }
+
+    public function invalidObjects() {
+        $invalidObject
+        return [
+            [$jsonInput, new MapperModel(), $expectedModel],
+            [$jsonInputWithRoot, new MapperModelWithRoot(), $expectedModelWithRoot]
+        ];
+    }
 }

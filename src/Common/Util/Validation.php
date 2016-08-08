@@ -35,7 +35,7 @@ class Validation {
 	 */
 	public static function isCustomType(string $type) {
 		$result = true;
-		$simpleTypes = ['boolean', 'integer', 'double', 'string', 'array', 'object',
+		$simpleTypes = ['NULL', 'boolean', 'integer', 'double', 'string', 'array', 'object',
 			'boolean[]', 'integer[]', 'double[]', 'string[]', '[]', 'object[]'];
 		foreach($simpleTypes as $simpleType) {
 			if($type == $simpleType) {

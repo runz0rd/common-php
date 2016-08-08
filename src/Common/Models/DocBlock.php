@@ -39,10 +39,10 @@ class DocBlock {
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return bool
 	 */
-	public function annotationExists($name) {
+	public function annotationExists(string $name) {
 		$result = true;
 		if(!isset($this->annotations[$name][0])) {
 			$result = false;
@@ -52,10 +52,10 @@ class DocBlock {
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return string
 	 */
-	public function getFirstAnnotation($name) {
+	public function getFirstAnnotation(string $name) {
 		if(!isset($this->annotations[$name][0])) {
 			throw new \InvalidArgumentException('Annotation ' . $name . ' not found in docBlock.');
 		}
@@ -64,10 +64,10 @@ class DocBlock {
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return array
 	 */
-	public function getAnnotation($name) {
+	public function getAnnotation(string $name) {
 		if(!isset($this->annotations[$name])) {
 			throw new \InvalidArgumentException('Annotation ' . $name . ' not found in docBlock.');
 		}

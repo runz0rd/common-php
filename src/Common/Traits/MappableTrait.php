@@ -20,7 +20,13 @@ trait MappableTrait {
 	 */
 	public function mapFromArray(array $data) {
 		$json = json_encode($data);
+        if($json === false) {
+            throw new \InvalidArgumentException('Invalid array supplied.');
+        }
 		$object = json_decode($json);
+        if($object === null) {
+            throw new \InvalidArgumentException('Invalid array supplied.');
+        }
 
 		$this->mapFromObject($object);
 	}
@@ -32,6 +38,9 @@ trait MappableTrait {
 	 */
 	public function mapFromJson(string $data) {
 		$object = json_decode($data);
+        if($object === null) {
+            throw new \InvalidArgumentException('Invalid json supplied.');
+        }
 
 		$this->mapFromObject($object);
 	}
@@ -41,9 +50,6 @@ trait MappableTrait {
 	 * @throws ModelMapperException
 	 */
 	public function mapFromObject($object) {
-		if(Validation::isEmpty((array) $object)) {
-			throw new \InvalidArgumentException('Invalid json string supplied.');
-		}
 		$mapper = new ModelMapper();
 		$mapper->map($object, $this);
 	}

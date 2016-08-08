@@ -6,13 +6,19 @@
  * Date: 7/31/2016
  * Time: 9:49 AM
  */
+use Common\Traits\MappableTrait;
+use Common\Traits\ConvertibleTrait;
+use Common\Traits\ValidatableTrait;
 
 class TestModel {
+    use MappableTrait;
+    use ConvertibleTrait;
+    use ValidatableTrait;
 
     /**
      * @var
      */
-    public $null;
+    public $noType;
 
     /**
      * @var boolean
@@ -33,7 +39,7 @@ class TestModel {
      * @name some?wierd-@ss::name
      * @var string
      */
-    public $named;
+    public $namedString;
 
     /**
      * @var integer
@@ -79,4 +85,23 @@ class TestModel {
      * @var TestModel[]
      */
     public $modelArray;
+
+    /**
+     * @required requiredString
+     * @var string
+     */
+    public $requiredString;
+
+    /**
+     * @required
+     * @var boolean
+     */
+    public $alwaysRequiredBoolean;
+
+    /**
+     * @required requiredInteger
+     * @required testRequired
+     * @var integer
+     */
+    public $multipleRequiredInteger;
 }

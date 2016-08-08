@@ -23,7 +23,7 @@ class ModelMapperTest extends \PHPUnit_Framework_TestCase {
     /**
      * @param $source
      * @param $actualModel
-     * @dataProvider validValues
+     * @dataProvider validMapValues
      */
 	public function testMap($source, $actualModel) {
 		$expectedModel = $this->modelMapper->map($source, new TestModel());
@@ -33,29 +33,33 @@ class ModelMapperTest extends \PHPUnit_Framework_TestCase {
     /**
      * @param $source
      * @param $model
-     * @dataProvider invalidValues
+     * @dataProvider invalidMapValues
      * @expectedException \Exception
      */
     public function testMapFail($source, $model) {
         $this->modelMapper->map($source, $model);
     }
 
-//    public function testUnmap() {
-//        $model = new MapperModel();
-//        $model->testProperty1 = 'testVal1';
-//        $model->testProperty2 = 'testVal2';
-//        $model->testProperty3 = 'testVal3';
-//        $model->testArray[] = new stdClass();
-//        $model->testArray[] = 'testVal4';
-//        $model->testArray[] = 'testVal5';
-//
-//        $json = '{"testProperty1":"testVal1","some?wierd-@ss::name":"testVal2","normalName":"testVal3","testArray":[{},"testVal4","testVal5"]}';
-//        $preparedObject = $this->modelMapper->unmap($model);
-//
-//        $this->assertEquals($json, json_encode($preparedObject));
-//    }
+    /**
+     * @param $actualUnmappedModel
+     * @param $model
+     * @dataProvider validUnmapValues
+     */
+    public function testUnmap($model, $actualUnmappedModel) {
+        $expectedUnmappedModel = $this->modelMapper->unmap($model);
+        $this->assertEquals($expectedUnmappedModel, $actualUnmappedModel);
+    }
 
-    public function invalidValues() {
+    /**
+     * @param $model
+     * @dataProvider invalidUnmapValues
+     * @expectedException \Exception
+     */
+    public function testUnmapFail($model) {
+        $this->modelMapper->unmap($model);
+    }
+
+    public function invalidMapValues() {
         return [
             [null, new TestModel()],
             ['', new TestModel()],
@@ -64,24 +68,25 @@ class ModelMapperTest extends \PHPUnit_Framework_TestCase {
             [array(), new TestModel()],
             [new stdClass(), new TestModel()],
             [new TestModel(), 1],
+            [new TestModel(), new DateTime()],
             [new TestModel(), new stdClass()]
         ];
     }
 
-    public function validValues() {
-        $nestedJson = '{"null":null,"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":null,"modelArray":[]}';
-        $json = '{"null":null,"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
+    public function validMapValues() {
+        $nestedJson = '{"noType":null,"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":null,"modelArray":[]}';
+        $json = '{"noType":null,"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
         $source = json_decode($json);
 
         $object = new stdClass();
         $object->a = 1;
 
         $model = new TestModel();
-        $model->null = null;
+        $model->noType = null;
         $model->boolTrue = true;
         $model->boolFalse = false;
         $model->string = 'a';
-        $model->named = 'named';
+        $model->namedString = 'named';
         $model->integer = 5;
         $model->array = [1,'a',3];
         $model->stringArray = ['a','b','c'];
@@ -95,6 +100,48 @@ class ModelMapperTest extends \PHPUnit_Framework_TestCase {
 
         return [
             [$source, $model]
+        ];
+    }
+
+    public function invalidUnmapValues() {
+        return [
+            [null],
+            [''],
+            [1,],
+            [false],
+            [array()],
+            [new stdClass()],
+            [new DateTime()]
+        ];
+    }
+
+    public function validUnmapValues() {
+        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
+        $json = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
+        $unmappedModel = json_decode($json);
+
+        $object = new stdClass();
+        $object->a = 1;
+
+        $model = new TestModel();
+        $model->noType = null;
+        $model->boolTrue = true;
+        $model->boolFalse = false;
+        $model->string = 'a';
+        $model->namedString = 'named';
+        $model->integer = 5;
+        $model->array = [1,'a',3];
+        $model->stringArray = ['a','b','c'];
+        $model->integerArray = [1,2,3];
+        $model->booleanArray = [true,true,false];
+        $model->objectArray = [$object,$object,$object];
+        $model->object = $object;
+        $nestedModel = clone $model;
+        $model->model = $nestedModel;
+        $model->modelArray = [$nestedModel,$nestedModel];
+
+        return [
+            [$model, $unmappedModel]
         ];
     }
 }

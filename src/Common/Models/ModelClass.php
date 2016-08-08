@@ -38,10 +38,10 @@ class ModelClass {
 
 	/**
 	 * ModelClassData constructor.
-	 * @param object $customObject
+	 * @param object $model
 	 */
-	public function __construct($customObject) {
-		$reflectionClass = new \ReflectionClass($customObject);
+	public function __construct($model) {
+		$reflectionClass = new \ReflectionClass($model);
 		$this->docBlock = new DocBlock($reflectionClass->getDocComment());
 		$this->className = $reflectionClass->getName();
 		$this->namespace = $reflectionClass->getNamespaceName();
@@ -52,8 +52,12 @@ class ModelClass {
 		}
 
 		$properties = $reflectionClass->getProperties();
+        if(count($properties) == 0) {
+            throw new \InvalidArgumentException('The model class ' . $reflectionClass->getName() . ' has no properties defined.');
+        }
+
 		foreach($properties as $property) {
-			$modelProperty = new ModelProperty($property, $customObject, $this->namespace);
+			$modelProperty = new ModelProperty($property, $model, $this->namespace);
 			if(!$modelProperty->getDocBlock()->annotationExists('internal')) {
 				$this->properties[] = $modelProperty;
 			}

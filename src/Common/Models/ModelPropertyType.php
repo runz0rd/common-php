@@ -36,12 +36,18 @@ class ModelPropertyType {
 	/**
 	 * @var string
 	 */
-	private $namespace;
+	private $parentNS;
 
-	public function __construct(string $propertyType, string $annotatedType, string $namespace) {
+    /**
+     * ModelPropertyType constructor.
+     * @param string $propertyType
+     * @param string $annotatedType
+     * @param string $parentNS
+     */
+	public function __construct(string $propertyType, string $annotatedType, string $parentNS) {
 		$this->propertyType = $propertyType;
 		$this->annotatedType = $annotatedType;
-		$this->namespace = $namespace;
+		$this->parentNS = $parentNS;
 
 		$this->actualType = $this->annotatedType;
 		if(Validation::isCustomType($this->annotatedType)) {
@@ -59,18 +65,17 @@ class ModelPropertyType {
 	 */
 	public function getModelClassName() {
 		if(!$this->isModel) {
-			throw new \Exception('Property type is not custom.');
+			throw new \Exception('Property is not a model.');
 		}
-		$customType = $this->annotatedType;
-		if(strpos($customType, '[]')) {
-			$customType = rtrim($this->annotatedType, '[]');
+		$modelClassName = $this->annotatedType;
+		if(strpos($modelClassName, '[]')) {
+            $modelClassName = rtrim($modelClassName, '[]');
 		}
-		if(!strpos($customType, '\\')) {
-			$customType = '\\' . $customType;
+		if(strpos($modelClassName, '\\') === false) {
+            $modelClassName = $this->parentNS . '\\' . $modelClassName;
 		}
-		$className = $this->namespace . $customType;
 
-		return $className;
+		return $modelClassName;
 	}
 
 	/**
@@ -103,13 +108,5 @@ class ModelPropertyType {
 	public function getActualType()
 	{
 		return $this->actualType;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getNamespace()
-	{
-		return $this->namespace;
 	}
 }

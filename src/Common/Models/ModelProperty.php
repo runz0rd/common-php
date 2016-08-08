@@ -14,7 +14,7 @@ class ModelProperty {
 	/**
 	 * @var string
 	 */
-	private $className;
+	private $parentClassName;
 
 	/**
 	 * @var string
@@ -59,29 +59,30 @@ class ModelProperty {
 	/**
 	 * ModelPropertyData constructor.
 	 * @param \ReflectionProperty $property
-	 * @param object $object
-	 * @param string $namespace
+	 * @param object $parent
+	 * @param string $parentNS
 	 */
-	public function __construct(\ReflectionProperty $property, $object, string $namespace) {
+	public function __construct(\ReflectionProperty $property, $parent, string $parentNS) {
 		$this->property = $property;
-		$this->object = $object;
+		$this->object = $parent;
 		$this->docBlock = new DocBlock($property->getDocComment());
 
-		$this->className = get_class($object);
+		$this->parentClassName = get_class($parent);
 
 		$this->propertyName = $property->getName();
 		if($this->docBlock->annotationExists('name')) {
 			$this->annotatedName = $this->docBlock->getFirstAnnotation('name');
 		}
 
-		$propertyType = gettype($this->property->getValue($object));
+		$propertyType = gettype($this->property->getValue($parent));
 		$annotatedType = 'NULL';
-		if($this->docBlock->annotationExists('var')) {
+		if($this->docBlock->annotationExists('var') && !Validation::isEmpty($this->docBlock->getFirstAnnotation('var'))) {
 			$annotatedType = $this->docBlock->getFirstAnnotation('var');
 		}
-		$this->type = new ModelPropertyType($propertyType, $annotatedType, $namespace);
+		$this->type = new ModelPropertyType($propertyType, $annotatedType, $parentNS);
 
 		$this->isRequired = false;
+        $this->requiredTypes = [];
 		if($this->docBlock->annotationExists('required')) {
 			$this->isRequired = true;
 			$this->requiredTypes = $this->docBlock->getAnnotation('required');
@@ -118,9 +119,9 @@ class ModelProperty {
 	/**
 	 * @return string
 	 */
-	public function getClassName()
+	public function getParentClassName()
 	{
-		return $this->className;
+		return $this->parentClassName;
 	}
 
 	/**

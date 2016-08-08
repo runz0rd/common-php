@@ -71,10 +71,10 @@ class ModelValidator {
 		$expectedType = $property->getType()->getActualType();
 		$actualType = gettype($property->getPropertyValue());
 
-		if(!$property->isRequired() && $actualType != 'NULL') {
+		if(!$property->isRequired() && $expectedType != 'NULL' && $actualType != 'NULL') {
 			$this->assertPropertyType($expectedType, $actualType, $property);
 		}
-		if($property->isRequired() && array_search($requiredType, $property->getRequiredTypes()) !== false) {
+		if($property->isRequired() && $expectedType != 'NULL' && array_search($requiredType, $property->getRequiredTypes()) !== false) {
 			$this->assertPropertyType($expectedType, $actualType, $property);
 		}
 	}
@@ -103,7 +103,7 @@ class ModelValidator {
      */
 	protected function assertPropertyType(string $expected, string $actual, ModelProperty $propertyData) {
 		if($expected != $actual) {
-			throw new ModelValidatorException('Expecting ' . $expected . ' type but got ' . $actual . ' while validating ' . $propertyData->getClassName() . '::' . $propertyData->getPropertyName());
+			throw new ModelValidatorException('Expecting ' . $expected . ' type but got ' . $actual . ' while validating ' . $propertyData->getParentClassName() . '::' . $propertyData->getPropertyName());
 		}
 	}
 
@@ -115,7 +115,7 @@ class ModelValidator {
 	 */
 	protected function assertRequiredProperty(bool $expected, bool $actual, ModelProperty $propertyData) {
 		if($expected != $actual) {
-			throw new ModelValidatorException('Required property ' . $propertyData->getClassName() . '::' . $propertyData->getPropertyName() . ' not set.');
+			throw new ModelValidatorException('Required property ' . $propertyData->getParentClassName() . '::' . $propertyData->getPropertyName() . ' not set.');
 		}
 	}
 }
