@@ -33,4 +33,22 @@ class Iteration {
 
         return $sourceValue;
     }
+
+    /**
+     * @param array|object $source
+     * @return array|object
+     */
+    public static function nullifyEmptyProperties($source) {
+        foreach($source as $key => $value) {
+            if(Validation::isEmpty($value)) {
+                $value = null;
+            }
+            if(is_object($value) || is_array($value)) {
+                $value = self::nullifyEmptyProperties($value);
+            }
+            $source->$key = $value;
+        }
+
+        return $source;
+    }
 }
