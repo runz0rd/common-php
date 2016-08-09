@@ -8,6 +8,7 @@
 
 namespace Common\Mapper;
 use Common\Models\ModelClass;
+use Common\Models\ModelProperty;
 use Common\Models\ModelPropertyType;
 use Common\Util\Validation;
 use Common\Util\Iteration;
@@ -35,20 +36,36 @@ class ModelMapper implements IModelMapper {
 		}
 
 		foreach($modelClass->getProperties() as $property) {
-			$sourceValue = Iteration::findValueByName($property->getName(), $source, $property->getPropertyValue());
-			$mappedValue = $this->mapValueByType($property->getType(), $sourceValue);
-			$property->setPropertyValue($mappedValue);
+		    if($property->getDocBlock()->annotationExists('attribute')) {
+                $mappedValue = $this->mapAttributeByName($property->getName(), $source);
+            }
+            else {
+                $sourceValue = Iteration::findValueByName($property->getName(), $source, $property->getPropertyValue());
+                $mappedValue = $this->mapPropertyByType($property->getType(), $sourceValue);
+
+            }
+            $property->setPropertyValue($mappedValue);
 		}
 
 		return $model;
 	}
+
+    protected function mapAttributeByName(string $attributeName, $source) {
+        $mappedAttributeValue = null;
+        $attributesKey = '@attributes';
+        if(isset($source->$attributesKey) && isset($source->$attributesKey->$attributeName)) {
+            $mappedAttributeValue = $source->$attributesKey->$attributeName;
+        }
+
+        return $mappedAttributeValue;
+    }
 
 	/**
 	 * @param ModelPropertyType $propertyType
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	protected function mapValueByType(ModelPropertyType $propertyType, $value) {
+	protected function mapPropertyByType(ModelPropertyType $propertyType, $value) {
 		$mappedPropertyValue = $value;
 
 		if($propertyType->isModel()) {

@@ -136,11 +136,11 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
         ];
     }
 
-    public function invalidObjects() {
-        $invalidObject
-        return [
-            [$jsonInput, new MapperModel(), $expectedModel],
-            [$jsonInputWithRoot, new MapperModelWithRoot(), $expectedModelWithRoot]
-        ];
-    }
+//    public function invalidObjects() {
+//        $invalidObject
+//        return [
+//            [$jsonInput, new MapperModel(), $expectedModel],
+//            [$jsonInputWithRoot, new MapperModelWithRoot(), $expectedModelWithRoot]
+//        ];
+//    }
 }

@@ -16,6 +16,12 @@ class TestModel {
     use ValidatableTrait;
 
     /**
+     * @attribute
+     * @var string
+     */
+    public $attribute1;
+
+    /**
      * @var
      */
     public $noType;
