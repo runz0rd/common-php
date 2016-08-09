@@ -39,6 +39,9 @@ class Iteration {
      * @return array|object
      */
     public static function nullifyEmptyProperties($source) {
+        if(!is_object($source) && !is_array($source)) {
+            throw new \InvalidArgumentException('Source must be an object or an array.');
+        }
         foreach($source as $key => $value) {
             if(Validation::isEmpty($value)) {
                 $value = null;
