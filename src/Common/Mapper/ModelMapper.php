@@ -60,27 +60,15 @@ class ModelMapper implements IModelMapper {
 	 * @return mixed
 	 */
 	protected function mapPropertyByType(ModelPropertyType $propertyType, $value) {
-		$mappedPropertyValue = $value;
+        $mappedPropertyValue = Iteration::typeFilter($value);
 		if($propertyType->isModel()) {
 			if($propertyType->getActualType() == 'array' && is_array($value)) {
 				$mappedPropertyValue = $this->mapModelArray($propertyType->getModelClassName(), $value);
 			}
-
 			elseif($propertyType->getActualType() == 'object' && is_object($value)) {
 				$mappedPropertyValue = $this->mapModel($propertyType->getModelClassName(), $value);
 			}
 		}
-
-		if($propertyType->getAnnotatedType() == 'integer') {
-			$mappedPropertyValue = Validation::getInteger($value);
-		}
-		elseif($propertyType->getAnnotatedType() == 'boolean') {
-			$mappedPropertyValue = Validation::getBoolean($value);
-		}
-		elseif($propertyType->getAnnotatedType() == 'array') {
-			//TODO add filtering for boolean and integer arrays
-		}
-
 
 		return $mappedPropertyValue;
 	}
@@ -109,7 +97,7 @@ class ModelMapper implements IModelMapper {
 	 */
     protected function mapModel(string $modelClassName, $source) {
 		$model = new $modelClassName();
-		$mappedModel = $this->map($source, $model);
+		$mappedModel = self::map($source, $model);
 
 		return $mappedModel;
 	}
@@ -184,7 +172,7 @@ class ModelMapper implements IModelMapper {
 	 * @return object
 	 */
 	protected function unmapModel($model) {
-		$unmappedObject = $this->unmap($model);
+		$unmappedObject = self::unmap($model);
 
 		return $unmappedObject;
 	}
@@ -200,4 +188,15 @@ class ModelMapper implements IModelMapper {
 
 		return $newObject;
 	}
+
+    /**
+     * @param object $model
+     * @return string
+     */
+    public function getModelRootName($model) {
+        $modelClass = new ModelClass($model);
+        $rootName = $modelClass->getRootName();
+
+        return $rootName;
+    }
 }

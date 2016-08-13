@@ -20,7 +20,7 @@ interface IModelMapper {
 
 	/**
 	 * @param object $model
-	 * @return \stdClass
+	 * @return mixed
 	 */
 	public function unmap($model);
 }

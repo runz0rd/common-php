@@ -48,7 +48,7 @@ class Validation {
 	}
 
     /**
-     * Checks if the given source has a property
+     * Checks if the given source has a property and returns its value
      * @param object $source
      * @param string $propertyName
      * @return bool
@@ -67,26 +67,30 @@ class Validation {
     }
 
 	/**
+     * Returns a casted integer or the original value
 	 * @param mixed $value
-	 * @return integer|null
+	 * @return integer|mixed
 	 */
-	public static function getInteger($value) {
-		$result = null;
+	public static function filterInteger($value) {
 		$intValue = filter_var($value, FILTER_VALIDATE_INT);
-		if($intValue !== false) {
-			$result = $intValue;
+		if($intValue !== false && is_string($value)) {
+            $value = $intValue;
 		}
 
-		return $result;
+		return $value;
 	}
 
 	/**
+     * Returns a casted boolean or the original value
 	 * @param mixed $value
-	 * @return boolean|null
+	 * @return boolean|mixed
 	 */
-	public static function getBoolean($value) {
-		$result = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+	public static function filterBoolean($value) {
+		$boolValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        if(!is_null($boolValue) && preg_match('/(true|false)/i', $value)) {
+            $value = $boolValue;
+        }
 
-		return $result;
+		return $value;
 	}
 }

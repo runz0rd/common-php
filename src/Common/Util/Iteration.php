@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: milosh
+ * User: milos.pejanovic
  * Date: 7/30/2016
  * Time: 4:08 PM
  */
@@ -35,26 +35,61 @@ class Iteration {
     }
 
     /**
+     * Assigns null to values considered empty
+     * @see Validation::isEmpty
+     * @param mixed $source
+     * @return mixed
+     */
+    public static function nullifyEmpty($source) {
+        if(Validation::isEmpty($source)) {
+            $source = null;
+        }
+        if(is_object($source) && is_array($source)) {
+            foreach($source as $key => $value) {
+                $nullifiedValue = self::nullifyEmpty($value);
+                $source = self::assign($source, $key, $nullifiedValue);
+            }
+        }
+
+        return $source;
+    }
+
+    /**
+     * Filters string values to their proper type, if possible
+     * @param mixed $source
+     * @return mixed
+     */
+    public static function typeFilter($source) {
+        if(is_object($source) || is_array($source)) {
+            foreach($source as $key => $value) {
+                $filteredValue = self::typeFilter($value);
+                $source = self::assign($source, $key, $filteredValue);
+            }
+        }
+        else {
+            $source = Validation::filterInteger($source);
+            $source = Validation::filterBoolean($source);
+        }
+
+        return $source;
+    }
+
+    /**
+     * Assign a value to an array or object
      * @param array|object $source
+     * @param string $key
+     * @param mixed $value
      * @return array|object
      */
-    public static function nullifyEmptyProperties($source) {
-        if(!is_object($source) && !is_array($source)) {
-            throw new \InvalidArgumentException('Source must be an object or an array.');
+    public static function assign($source, string $key, $value) {
+        if(!is_array($source) && !is_object($source)) {
+            throw new \InvalidArgumentException('The source must be an array, or an object with accessible properties.');
         }
-        foreach($source as $key => $value) {
-            if(Validation::isEmpty($value)) {
-                $value = null;
-            }
-            if(is_object($value) || is_array($value)) {
-                $value = self::nullifyEmptyProperties($value);
-            }
-            if(is_object($source)) {
-                $source->$key = $value;
-            }
-            if(is_array($source)) {
-                $source[$key] = $value;
-            }
+        if(is_object($source)) {
+            $source->$key = $value;
+        }
+        elseif(is_array($source)) {
+            $source[$key] = $value;
         }
 
         return $source;
