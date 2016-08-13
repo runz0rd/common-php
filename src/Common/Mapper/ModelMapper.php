@@ -8,7 +8,6 @@
 
 namespace Common\Mapper;
 use Common\Models\ModelClass;
-use Common\Models\ModelProperty;
 use Common\Models\ModelPropertyType;
 use Common\Util\Validation;
 use Common\Util\Iteration;
@@ -29,11 +28,6 @@ class ModelMapper implements IModelMapper {
             throw new \InvalidArgumentException('Model must be an object with properties.');
         }
 		$modelClass = new ModelClass($model);
-
-        $rootName = $modelClass->getRootName();
-		if(Validation::hasProperty($source, $rootName)) {
-			$source = $source->{$modelClass->getRootName()};
-		}
 
 		foreach($modelClass->getProperties() as $property) {
 		    if($property->getDocBlock()->annotationExists('attribute')) {
@@ -67,7 +61,6 @@ class ModelMapper implements IModelMapper {
 	 */
 	protected function mapPropertyByType(ModelPropertyType $propertyType, $value) {
 		$mappedPropertyValue = $value;
-
 		if($propertyType->isModel()) {
 			if($propertyType->getActualType() == 'array' && is_array($value)) {
 				$mappedPropertyValue = $this->mapModelArray($propertyType->getModelClassName(), $value);
@@ -77,6 +70,17 @@ class ModelMapper implements IModelMapper {
 				$mappedPropertyValue = $this->mapModel($propertyType->getModelClassName(), $value);
 			}
 		}
+
+		if($propertyType->getAnnotatedType() == 'integer') {
+			$mappedPropertyValue = Validation::getInteger($value);
+		}
+		elseif($propertyType->getAnnotatedType() == 'boolean') {
+			$mappedPropertyValue = Validation::getBoolean($value);
+		}
+		elseif($propertyType->getAnnotatedType() == 'array') {
+			//TODO add filtering for boolean and integer arrays
+		}
+
 
 		return $mappedPropertyValue;
 	}
@@ -125,14 +129,17 @@ class ModelMapper implements IModelMapper {
 		foreach($modelClass->getProperties() as $property) {
 			$propertyKey = $property->getName();
 			$propertyValue = $property->getPropertyValue();
-			if(Validation::isEmpty($propertyValue)) {
+			if (Validation::isEmpty($propertyValue)) {
 				continue;
 			}
-			$unmappedObject->$propertyKey = $this->unmapValueByType($property->getType(), $propertyValue);
-		}
-
-		if(!Validation::isEmpty($modelClass->getRootName())) {
-			$unmappedObject = $this->addRootElement($unmappedObject, $modelClass->getRootName());
+			if($property->getDocBlock()->annotationExists('attribute')) {
+				$attributeKey = '@attributes';
+				$unmappedObject->$attributeKey = new \stdClass();
+				$unmappedObject->$attributeKey->$propertyKey = $propertyValue;
+			}
+			else {
+				$unmappedObject->$propertyKey = $this->unmapValueByType($property->getType(), $propertyValue);
+			}
 		}
 
 		return $unmappedObject;
