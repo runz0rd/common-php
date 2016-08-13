@@ -10,6 +10,10 @@ use Common\Traits\MappableTrait;
 use Common\Traits\ConvertibleTrait;
 use Common\Traits\ValidatableTrait;
 
+/**
+ * @root testModel
+ * Class TestModel
+ */
 class TestModel {
     use MappableTrait;
     use ConvertibleTrait;
@@ -42,7 +46,7 @@ class TestModel {
     public $string;
 
     /**
-     * @name some?wierd-@ss::name
+     * @name namedString123
      * @var string
      */
     public $namedString;

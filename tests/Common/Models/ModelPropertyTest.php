@@ -169,7 +169,7 @@ class ModelPropertyTest extends PHPUnit_Framework_TestCase {
             [1, $model->boolTrue, 'boolTrue', 'boolTrue', '', false, []],
             [2, $model->boolFalse, 'boolFalse', 'boolFalse', '', false, []],
             [3, $model->string, 'string', 'string', '', false, []],
-            [4, $model->namedString, 'some?wierd-@ss::name', 'named', 'some?wierd-@ss::name', false, []],
+            [4, $model->namedString, 'namedString123', 'named', 'namedString123', false, []],
             [5, $model->integer, 'integer', 'integer', '', false, []],
             [6, $model->array, 'array', 'array', '', false, []],
             [7, $model->stringArray, 'stringArray', 'stringArray', '', false, []],

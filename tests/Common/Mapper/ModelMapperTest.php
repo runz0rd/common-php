@@ -74,8 +74,8 @@ class ModelMapperTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function validMapValues() {
-        $nestedJson = '{"noType":null,"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":null,"modelArray":[]}';
-        $json = '{"noType":null,"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
+        $nestedJson = '{"noType":null,"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":null,"modelArray":[]}';
+        $json = '{"noType":null,"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
         $source = json_decode($json);
 
         $object = new stdClass();
@@ -116,8 +116,8 @@ class ModelMapperTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function validUnmapValues() {
-        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
-        $json = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
+        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
+        $json = '{"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
         $unmappedModel = json_decode($json);
 
         $object = new stdClass();

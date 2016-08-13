@@ -94,8 +94,8 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function validArrays() {
-        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
-        $validJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
+        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
+        $validJson = '{"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
 	    $validArray = json_decode($validJson);
 
 		return [
@@ -104,8 +104,8 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
 	}
 
     public function validJsons() {
-        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
-        $validJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
+        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
+        $validJson = '{"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
 
         return [
             [$validJson]
@@ -113,8 +113,8 @@ class MappableTraitTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function validObjects() {
-        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
-        $validJson = '{"boolTrue":true,"boolFalse":false,"string":"a","some?wierd-@ss::name":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
+        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
+        $validJson = '{"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
         $validObject = json_decode($validJson);
 
         return [

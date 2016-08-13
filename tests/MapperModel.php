@@ -24,7 +24,7 @@ class MapperModel {
 	/**
 	 * @required create
 	 * @required update
-	 * @name some?wierd-@ss::name
+	 * @name namedString123
 	 * @var string
 	 */
 	public $testProperty2;
