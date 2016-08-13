@@ -46,7 +46,7 @@ class ModelClass {
 		$this->className = $reflectionClass->getName();
 		$this->namespace = $reflectionClass->getNamespaceName();
 
-		$this->rootName = '';
+		$this->rootName = $this->className;
 		if($this->docBlock->annotationExists('root') && !Validation::isEmpty($this->docBlock->getAnnotation('root'))) {
 			$this->rootName = $this->docBlock->getFirstAnnotation('root');
 		}
