@@ -2,7 +2,7 @@
 
 /**
  * Created by PhpStorm.
- * User: milosh
+ * User: milos.pejanovic
  * Date: 8/9/2016
  * Time: 8:02 PM
  */
@@ -26,8 +26,8 @@ class XmlModelMapperTest extends PHPUnit_Framework_TestCase {
      * @param $xml
      * @dataProvider validValues
      */
-    public function testFromXml($expectedModel, $xml) {
-        $actualModel = $this->xmlMapper->fromXml($xml, new TestModel());
+    public function testMap($expectedModel, $xml) {
+        $actualModel = $this->xmlMapper->map($xml, new TestModel());
         $this->assertEquals($expectedModel, $actualModel);
     }
 
@@ -36,8 +36,8 @@ class XmlModelMapperTest extends PHPUnit_Framework_TestCase {
      * @param $expectedXml
      * @dataProvider validValues
      */
-    public function testToXml($model, $expectedXml) {
-        $actualXml = $this->xmlMapper->toXml($model);
+    public function testUnmap($model, $expectedXml) {
+        $actualXml = $this->xmlMapper->unmap($model);
         $this->assertEquals($expectedXml, $actualXml);
     }
 
@@ -46,6 +46,7 @@ class XmlModelMapperTest extends PHPUnit_Framework_TestCase {
         $object->a = 1;
 
         $model = new TestModel();
+        $model->attribute1 = 'attribute1';
         $model->noType = null;
         $model->boolTrue = true;
         $model->boolFalse = false;

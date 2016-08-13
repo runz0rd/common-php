@@ -7,35 +7,59 @@
  */
 
 namespace Common\Mapper;
-use Common\Models\ModelClass;
 use Common\Util\Iteration;
 use Common\Util\Validation;
 use Common\Util\Xml;
 
-class XmlModelMapper extends ModelMapper implements IModelMapper {
+class XmlModelMapper implements IModelMapper {
 
-    public function fromXml(string $xml, $model) {
-        $simpleXml = simplexml_load_string($xml);
-        $json = json_encode($simpleXml);
-        $object = json_decode($json);
-        $source = Iteration::nullifyEmptyProperties($object);
+    /**
+     * @var IModelMapper
+     */
+    public $modelMapper;
 
-        return $this->map($source, $model);
+    /**
+     * XmlModelMapper constructor.
+     */
+    public function __construct() {
+        $this->modelMapper = new ModelMapper();
     }
 
-    public function toXml($model) {
-        $object = $this->unmap($model);
-        $rootName = $this->getModelRootName($model);
-        $xml = $this->objectToXml($object, $rootName);
+    /**
+     * @param mixed $source
+     * @param object $model
+     * @return object
+     */
+    public function map($source, $model) {
+        $source = $this->fromXml($source);
+        $model = $this->modelMapper->map($source, $model);
+
+        return $model;
+    }
+
+    /**
+     * @param object $model
+     * @return string
+     */
+    public function unmap($model) {
+        $object = $this->modelMapper->unmap($model);
+        $rootName = $this->modelMapper->getModelRootName($model);
+        $xml = $this->toXml($object, $rootName);
 
         return $xml;
     }
 
-    public function getModelRootName($model) {
-        $modelClass = new ModelClass($model);
-        $rootName = $modelClass->getRootName();
+    /**
+     * @param string $xml
+     * @return object
+     */
+    protected function fromXml(string $xml) {
+        $simpleXml = simplexml_load_string($xml);
+        $json = json_encode($simpleXml);
+        $object = json_decode($json);
+        $source = Iteration::nullifyEmpty($object);
 
-        return $rootName;
+        return $source;
     }
 
     /**
@@ -44,7 +68,7 @@ class XmlModelMapper extends ModelMapper implements IModelMapper {
      * @return string
      * @throws ModelMapperException
      */
-    public function objectToXml($source, string $elementName) {
+    protected function toXml($source, string $elementName) {
         $elementXml = '<'.$elementName.'></'.$elementName.'>';
         $domDocument = new \DOMDocument();
         $domDocument->loadXML($elementXml);
@@ -111,7 +135,7 @@ class XmlModelMapper extends ModelMapper implements IModelMapper {
      * @return \DOMNode
      */
     protected function createDomNode(\DOMDocument $domDocument, string $name, $value) {
-        $xmlValue = $this->objectToXml($value, $name);
+        $xmlValue = $this->toXml($value, $name);
         $domDoc = new \DOMDocument();
         $domDoc->loadXML($xmlValue);
         $node = $domDocument->importNode($domDoc->documentElement, true);

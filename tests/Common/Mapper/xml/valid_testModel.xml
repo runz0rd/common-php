@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<testModel>
+<testModel attribute1="attribute1">
     <boolTrue>true</boolTrue>
     <boolFalse>false</boolFalse>
     <string>a</string>
@@ -29,7 +29,7 @@
     <object>
         <a>1</a>
     </object>
-    <model>
+    <model attribute1="attribute1">
         <boolTrue>true</boolTrue>
         <boolFalse>false</boolFalse>
         <string>a</string>
@@ -63,7 +63,7 @@
         <alwaysRequiredBoolean>false</alwaysRequiredBoolean>
         <multipleRequiredInteger>5</multipleRequiredInteger>
     </model>
-    <modelArray>
+    <modelArray attribute1="attribute1">
         <boolTrue>true</boolTrue>
         <boolFalse>false</boolFalse>
         <string>a</string>
@@ -97,7 +97,7 @@
         <alwaysRequiredBoolean>false</alwaysRequiredBoolean>
         <multipleRequiredInteger>5</multipleRequiredInteger>
     </modelArray>
-    <modelArray>
+    <modelArray attribute1="attribute1">
         <boolTrue>true</boolTrue>
         <boolFalse>false</boolFalse>
         <string>a</string>
