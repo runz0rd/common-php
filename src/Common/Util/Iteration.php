@@ -49,7 +49,12 @@ class Iteration {
             if(is_object($value) || is_array($value)) {
                 $value = self::nullifyEmptyProperties($value);
             }
-            $source->$key = $value;
+            if(is_object($source)) {
+                $source->$key = $value;
+            }
+            if(is_array($source)) {
+                $source[$key] = $value;
+            }
         }
 
         return $source;

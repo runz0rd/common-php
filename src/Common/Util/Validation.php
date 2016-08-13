@@ -65,4 +65,28 @@ class Validation {
 
         return $hasProperty;
     }
+
+	/**
+	 * @param mixed $value
+	 * @return integer|null
+	 */
+	public static function getInteger($value) {
+		$result = null;
+		$intValue = filter_var($value, FILTER_VALIDATE_INT);
+		if($intValue !== false) {
+			$result = $intValue;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param mixed $value
+	 * @return boolean|null
+	 */
+	public static function getBoolean($value) {
+		$result = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+		return $result;
+	}
 }
