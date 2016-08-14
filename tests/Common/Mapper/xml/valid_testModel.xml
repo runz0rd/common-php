@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <testModel attribute1="attribute1">
-    <boolTrue>true</boolTrue>
+    <boolTrue asd1="asd1">true</boolTrue>
     <boolFalse>false</boolFalse>
     <string>a</string>
     <namedString123>named</namedString123>
@@ -17,7 +17,7 @@
     <booleanArray>true</booleanArray>
     <booleanArray>true</booleanArray>
     <booleanArray>false</booleanArray>
-    <objectArray>
+    <objectArray asd1="asd1">
         <a>1</a>
     </objectArray>
     <objectArray>
@@ -26,7 +26,7 @@
     <objectArray>
         <a>1</a>
     </objectArray>
-    <object>
+    <object asd1="asd1">
         <a>1</a>
     </object>
     <model attribute1="attribute1">

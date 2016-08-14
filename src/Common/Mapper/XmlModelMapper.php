@@ -31,7 +31,11 @@ class XmlModelMapper implements IModelMapper {
      * @return object
      */
     public function map($source, $model) {
-        $source = $this->fromXml($source);
+        $domDocument = new \DOMDocument();
+        $domDocument->loadXML($source);
+        $domElement = $domDocument->documentElement;
+        $object = $this->fromXml($domElement);
+
         $model = $this->modelMapper->map($source, $model);
 
         return $model;
@@ -50,20 +54,53 @@ class XmlModelMapper implements IModelMapper {
     }
 
     /**
-     * @param string $xml
-     * @return object
+     * @param \DOMElement $domElement
+     * @return \stdClass
      */
-    protected function fromXml(string $xml) {
-        $simpleXml = simplexml_load_string($xml);
-        $json = json_encode($simpleXml);
-        $object = json_decode($json);
-        $source = Iteration::nullifyEmpty($object);
+    protected function fromXml(\DOMElement $domElement) {
+        $object = new \stdClass();
 
-        return $source;
+        $attributesKey = '@attributes';
+        for($i = 0; $i < $domElement->attributes->length; $i++) {
+            $key = $domElement->attributes->item($i)->nodeName;
+            $value = $domElement->attributes->item($i)->nodeValue;
+            $object->$attributesKey[$key] = $value;
+        }
+
+        for($i = 0; $i < $domElement->childNodes->length; $i++) {
+            $key = $domElement->childNodes->item($i)->nodeName;
+            $type = $domElement->childNodes->item($i)->nodeType;
+            $hasAttributes = $domElement->childNodes->item($i)->hasAttributes();
+            $hasChildren = $domElement->childNodes->item($i)->hasChildNodes();
+
+            if($type == 1) {
+                $value = $domElement->childNodes->item($i)->nodeValue;
+                if($hasAttributes) {
+                    $value = $this->fromXml($domElement->childNodes->item($i));
+                }
+            }
+            else {
+                $key = $domElement->tagName;
+                $value = $domElement->childNodes->item($i)->nodeValue;
+            }
+
+            if(isset($object->$key)) {
+                $valueArray = $object->$key;
+                if(!is_array($object->$key)) {
+                    $valueArray = [];
+                    $valueArray[] = $object->$key;
+                }
+                $valueArray[] = $value;
+                $value = $valueArray;
+            }
+            $object->$key = $value;
+        }
+
+        return $object;
     }
 
     /**
-     * @param object|array $source
+     * @param object $source
      * @param string $elementName
      * @return string
      * @throws ModelMapperException
@@ -87,7 +124,7 @@ class XmlModelMapper implements IModelMapper {
                 $child = $this->createDomNode($domDocument, $key, $value);
                 $domElement->appendChild($child);
             }
-            elseif(is_array($value)) {
+            if(is_array($value)) {
                 foreach($value as $arrayKey => $arrayValue) {
                     if(is_object($arrayValue) || is_array($arrayValue)) {
                         $child = $this->createDomNode($domDocument, $key, $arrayValue);
@@ -131,7 +168,7 @@ class XmlModelMapper implements IModelMapper {
     /**
      * @param \DOMDocument $domDocument
      * @param string $name
-     * @param mixed $value
+     * @param object $value
      * @return \DOMNode
      */
     protected function createDomNode(\DOMDocument $domDocument, string $name, $value) {
