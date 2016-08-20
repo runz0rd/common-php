@@ -37,4 +37,26 @@ class Xml {
 
 		return $xml;
 	}
+
+    /**
+     * Checks if a key is used more than once in DOMNode children
+     * @param \DOMNode $parentElement
+     * @param string $key
+     * @return bool
+     */
+    public static function isDomNodeArray(\DOMNode $parentElement, string $key) {
+        $result = false;
+        $keyCount = 0;
+        for($i = 0; $i < $parentElement->childNodes->length; $i++) {
+            $nodeName = $parentElement->childNodes->item($i)->nodeName;
+            if($nodeName == $key) {
+                $keyCount++;
+            }
+        }
+        if($keyCount > 1) {
+            $result = true;
+        }
+
+        return $result;
+    }
 }

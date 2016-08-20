@@ -94,4 +94,39 @@ class Iteration {
 
         return $source;
     }
+
+    /**
+     * Returns the array value matched by needle or null on failure
+     * @param array $haystackArray
+     * @param string $needle
+     * @return string|null
+     */
+    public static function strposArray(array $haystackArray, string $needle) {
+        $result = null;
+        foreach($haystackArray as $haystack) {
+            if(strpos($haystack, $needle) !== false) {
+                $result = $haystack;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Push a value into an array inside an object
+     * $object->$key becomes an array if not already
+     * @param object $object
+     * @param string $key
+     * @param mixed $value
+     * @return object
+     */
+    public static function pushArrayValue($object, string $key, $value) {
+        if(!is_object($object)) {
+            throw new \InvalidArgumentException('The source must be an object with accessible properties.');
+        }
+        if(!isset($object->$key) || !is_array($object->$key)) {
+            $object->$key = [];
+        }
+        array_push($object->$key, $value);
+    }
 }
