@@ -70,20 +70,20 @@ class ModelProperty {
 		$this->parentClassName = get_class($parent);
 
 		$this->propertyName = $property->getName();
-		if($this->docBlock->annotationExists('name')) {
+		if($this->docBlock->hasAnnotation('name')) {
 			$this->annotatedName = $this->docBlock->getFirstAnnotation('name');
 		}
 
 		$propertyType = gettype($this->property->getValue($parent));
 		$annotatedType = 'NULL';
-		if($this->docBlock->annotationExists('var') && !Validation::isEmpty($this->docBlock->getFirstAnnotation('var'))) {
+		if($this->docBlock->hasAnnotation('var') && !Validation::isEmpty($this->docBlock->getFirstAnnotation('var'))) {
 			$annotatedType = $this->docBlock->getFirstAnnotation('var');
 		}
 		$this->type = new ModelPropertyType($propertyType, $annotatedType, $parentNS);
 
 		$this->isRequired = false;
         $this->requiredTypes = [];
-		if($this->docBlock->annotationExists('required')) {
+		if($this->docBlock->hasAnnotation('required')) {
 			$this->isRequired = true;
 			$this->requiredTypes = $this->docBlock->getAnnotation('required');
 		}

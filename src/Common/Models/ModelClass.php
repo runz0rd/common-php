@@ -47,7 +47,7 @@ class ModelClass {
 		$this->namespace = $reflectionClass->getNamespaceName();
 
 		$this->rootName = lcfirst($reflectionClass->getShortName());
-		if($this->docBlock->annotationExists('root') && !Validation::isEmpty($this->docBlock->getAnnotation('root'))) {
+		if($this->docBlock->hasAnnotation('root') && !Validation::isEmpty($this->docBlock->getAnnotation('root'))) {
 			$this->rootName = $this->docBlock->getFirstAnnotation('root');
 		}
 
@@ -58,7 +58,7 @@ class ModelClass {
 
 		foreach($properties as $property) {
 			$modelProperty = new ModelProperty($property, $model, $this->namespace);
-			if(!$modelProperty->getDocBlock()->annotationExists('internal')) {
+			if(!$modelProperty->getDocBlock()->hasAnnotation('internal')) {
 				$this->properties[] = $modelProperty;
 			}
 		}

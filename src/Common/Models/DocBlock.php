@@ -42,7 +42,7 @@ class DocBlock {
 	 * @param string $name
 	 * @return bool
 	 */
-	public function annotationExists(string $name) {
+	public function hasAnnotation(string $name) {
 		$result = true;
 		if(!isset($this->annotations[$name][0])) {
 			$result = false;

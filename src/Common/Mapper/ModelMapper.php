@@ -30,7 +30,7 @@ class ModelMapper implements IModelMapper {
 		$modelClass = new ModelClass($model);
 
 		foreach($modelClass->getProperties() as $property) {
-		    if($property->getDocBlock()->annotationExists('attribute')) {
+		    if($property->getDocBlock()->hasAnnotation('attribute')) {
                 $mappedValue = $this->mapAttributeByName($property->getName(), $source);
             }
             else {
@@ -47,8 +47,8 @@ class ModelMapper implements IModelMapper {
     protected function mapAttributeByName(string $attributeName, $source) {
         $mappedAttributeValue = null;
         $attributesKey = '@attributes';
-        if(isset($source->$attributesKey) && isset($source->$attributesKey->$attributeName)) {
-            $mappedAttributeValue = $source->$attributesKey->$attributeName;
+        if(isset($source->$attributesKey) && isset($source->$attributesKey[$attributeName])) {
+            $mappedAttributeValue = $source->$attributesKey[$attributeName];
         }
 
         return $mappedAttributeValue;
@@ -120,7 +120,7 @@ class ModelMapper implements IModelMapper {
 			if (Validation::isEmpty($propertyValue)) {
 				continue;
 			}
-			if($property->getDocBlock()->annotationExists('attribute')) {
+			if($property->getDocBlock()->hasAnnotation('attribute')) {
 				$attributeKey = '@attributes';
 				$unmappedObject->$attributeKey = new \stdClass();
 				$unmappedObject->$attributeKey->$propertyKey = $propertyValue;
