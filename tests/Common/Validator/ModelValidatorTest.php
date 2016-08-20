@@ -25,7 +25,8 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
      * @param $requiredType
      * @dataProvider validModels
      */
-    public function testValidate($validModel, $requiredType) {
+    public function testValidateWithRules($validModel, $requiredType) {
+        $this->modelValidator->useRules();
         $this->modelValidator->validate($validModel, $requiredType);
     }
 
@@ -35,7 +36,8 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
      * @dataProvider invalidModels
      * @expectedException Exception
      */
-    public function testValidateFail($invalidModel, $requiredType) {
+    public function testValidateWithRulesFail($invalidModel, $requiredType) {
+        $this->modelValidator->useRules();
         $this->modelValidator->validate($invalidModel, $requiredType);
     }
 
@@ -62,6 +64,8 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
         $nestedModel = clone $model;
         $model->model = $nestedModel;
         $model->modelArray = [$nestedModel,$nestedModel];
+        $model->emailRule = 'test@test.com';
+        $model->multipleRules = 'test@test.com';
 
         return [
             [$model, 'requiredString'],
@@ -94,6 +98,8 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
         $nestedModel = clone $model;
         $model->model = $nestedModel;
         $model->modelArray = [$nestedModel,$nestedModel];
+        $model->emailRule = 'test@test.com';
+        $model->multipleRules = 'test@test.com';
 
         $invalidModel1 = clone $model;
         $invalidModel1->boolTrue = '234';
@@ -143,6 +149,12 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
         $invalidModel16 = clone $model;
         $invalidModel16->multipleRequiredInteger = 'asd';
 
+        $invalidModel17 = clone $model;
+        $invalidModel17->emailRule = 'invalidEmail';
+
+        $invalidModel18 = clone $model;
+        $invalidModel18->multipleRules = 3;
+
         return [
             [$invalidModel1, ''],
             [$invalidModel2, ''],
@@ -162,7 +174,9 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
             [$invalidModel16, 'requiredInteger'],
             [$invalidModel14, 'testRequired'],
             [$invalidModel15, 'testRequired'],
-            [$invalidModel16, 'testRequired']
+            [$invalidModel16, 'testRequired'],
+            [$invalidModel17, ''],
+            [$invalidModel18, '']
         ];
     }
 }

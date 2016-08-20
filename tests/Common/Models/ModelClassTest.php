@@ -53,7 +53,7 @@ class ModelClassTest extends PHPUnit_Framework_TestCase {
 
     public function testGetRootName() {
         $expected = $this->modelClass->getRootName();
-        $this->assertEquals($expected, '');
+        $this->assertEquals($expected, 'testModel');
     }
 
     /**

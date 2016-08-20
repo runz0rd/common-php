@@ -20,12 +20,6 @@ class TestModel {
     use ValidatableTrait;
 
     /**
-     * @attribute
-     * @var string
-     */
-    public $attribute1;
-
-    /**
      * @var
      */
     public $noType;
@@ -114,4 +108,21 @@ class TestModel {
      * @var integer
      */
     public $multipleRequiredInteger;
+
+    /**
+     * @attribute
+     * @var string
+     */
+    public $attribute1;
+
+    /**
+     * @rule email
+     */
+    public $emailRule;
+
+    /**
+     * @rule string
+     * @rule email
+     */
+    public $multipleRules;
 }

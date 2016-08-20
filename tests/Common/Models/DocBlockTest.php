@@ -25,8 +25,8 @@ class DocBlockTest extends PHPUnit_Framework_TestCase {
      * @param $name
      * @dataProvider validValues
      */
-    public function testAnnotationExists($name) {
-        $result = $this->docBlock->annotationExists($name);
+    public function testHasAnnotation($name) {
+        $result = $this->docBlock->hasAnnotation($name);
         $this->assertEquals($result, true);
     }
 
@@ -34,8 +34,8 @@ class DocBlockTest extends PHPUnit_Framework_TestCase {
      * @param $name
      * @dataProvider invalidValues
      */
-    public function testAnnotationExistsFail($name) {
-        $result = $this->docBlock->annotationExists($name);
+    public function testHasAnnotationFail($name) {
+        $result = $this->docBlock->hasAnnotation($name);
         $this->assertEquals($result, false);
     }
 
