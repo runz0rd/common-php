@@ -9,9 +9,15 @@
 namespace Common\Validator;
 use Common\Models\ModelClass;
 use Common\Models\ModelProperty;
+use Common\Util\Iteration;
 use Common\Util\Validation;
 
 class ModelValidator {
+
+    /**
+     * @var IRule[]
+     */
+    private $rules;
 
 	/**
 	 * @param object $object
@@ -30,6 +36,60 @@ class ModelValidator {
 		}
 	}
 
+    /**
+     * Load all the rule classes from the specified folder
+     * @param string $location
+     */
+	public function useRules(string $location = __DIR__ . '\Rules') {
+        foreach(glob($location . '\*.php') as $filename) {
+            @require_once $filename;
+            $className = basename($filename, ".php");
+            $autoloaded = get_declared_classes();
+            $class = Iteration::strposArray($autoloaded, $className);
+
+            if(!is_null($class)) {
+                /** @var IRule $rule */
+                $rule = new $class;
+                if ($rule instanceof IRule) {
+                    $ruleName = strtolower($rule->getName());
+                    $this->rules[$ruleName] = $rule;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param IRule $rule
+     */
+    public function useRule(IRule $rule) {
+        $ruleName = strtolower($rule->getName());
+        $this->rules[$ruleName] = $rule;
+    }
+
+    /**
+     * @param ModelProperty $property
+     * @throws ModelValidatorException
+     */
+    protected function validateRules(ModelProperty $property) {
+        if(!is_null($property->getPropertyValue()) && $property->getDocBlock()->hasAnnotation('rule')) {
+            $definedRules = $property->getDocBlock()->getAnnotation('rule');
+            foreach($definedRules as $definedRule) {
+                $ruleName = strtolower($definedRule);
+                if(!isset($this->rules[$ruleName])) {
+                    continue;
+                }
+                $rule = $this->rules[strtolower($definedRule)];
+                try {
+                    $rule->validate($property->getPropertyValue());
+                }
+                catch(\Exception $ex) {
+                    $message = 'Error while validating ' . $property->getParentClassName() . '::' . $property->getPropertyName() . '. ' . $ex->getMessage();
+                    throw new ModelValidatorException($message);
+                }
+            }
+        }
+    }
+
 	/**
 	 * @param ModelProperty $property
 	 * @param string $requiredType
@@ -39,6 +99,7 @@ class ModelValidator {
 			$this->validateRequiredProperty($property, $requiredType);
 		}
 		$this->validatePropertyType($property, $requiredType);
+        $this->validateRules($property);
 
 		if($property->getType()->isModel()) {
 		    $this->validateModelProperty($property->getPropertyValue(), $requiredType);
@@ -98,24 +159,24 @@ class ModelValidator {
     /**
      * @param string $expected
      * @param string $actual
-     * @param ModelProperty $propertyData
+     * @param ModelProperty $property
      * @throws ModelValidatorException
      */
-	protected function assertPropertyType(string $expected, string $actual, ModelProperty $propertyData) {
+	protected function assertPropertyType(string $expected, string $actual, ModelProperty $property) {
 		if($expected != $actual) {
-			throw new ModelValidatorException('Expecting ' . $expected . ' type but got ' . $actual . ' while validating ' . $propertyData->getParentClassName() . '::' . $propertyData->getPropertyName());
+			throw new ModelValidatorException('Expecting ' . $expected . ' type but got ' . $actual . ' while validating ' . $property->getParentClassName() . '::' . $property->getPropertyName());
 		}
 	}
 
 	/**
 	 * @param bool $expected
 	 * @param bool $actual
-	 * @param ModelProperty $propertyData
+	 * @param ModelProperty $property
 	 * @throws ModelValidatorException
 	 */
-	protected function assertRequiredProperty(bool $expected, bool $actual, ModelProperty $propertyData) {
+	protected function assertRequiredProperty(bool $expected, bool $actual, ModelProperty $property) {
 		if($expected != $actual) {
-			throw new ModelValidatorException('Required property ' . $propertyData->getParentClassName() . '::' . $propertyData->getPropertyName() . ' not set.');
+			throw new ModelValidatorException('Required property ' . $property->getParentClassName() . '::' . $property->getPropertyName() . ' not set.');
 		}
 	}
 }
