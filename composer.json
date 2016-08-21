@@ -1,8 +1,8 @@
 {
-    "name": "devtech/common-php",
-    "description": "My collection of Common libraries for php.",
+    "name": "milos-pejanovic/common-php",
+    "description": "My collection of common libraries for php.",
     "keywords": ["common", "library", "php", "object", "mapper", "validator", "traits"],
-    "license": "proprietary",
+    "license": "MIT"
     "type": "library",
     "authors": [
         {
