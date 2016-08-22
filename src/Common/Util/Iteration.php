@@ -44,7 +44,7 @@ class Iteration {
         if(Validation::isEmpty($source)) {
             $source = null;
         }
-        if(is_object($source) && is_array($source)) {
+        if(is_object($source) || is_array($source)) {
             foreach($source as $key => $value) {
                 $nullifiedValue = self::nullifyEmpty($value);
                 $source = self::assign($source, $key, $nullifiedValue);
