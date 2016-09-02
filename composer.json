@@ -1,7 +1,7 @@
 {
     "name": "milos-pejanovic/common-php",
     "description": "My collection of common libraries for php.",
-    "keywords": ["common", "library", "php", "object", "mapper", "validator", "traits"],
+    "keywords": ["common", "library", "php", "helpers", "utilities"],
     "license": "MIT",
     "type": "library",
     "authors": [

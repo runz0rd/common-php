@@ -6,9 +6,6 @@
  * Date: 7/31/2016
  * Time: 9:49 AM
  */
-use Common\Traits\MappableTrait;
-use Common\Traits\ConvertibleTrait;
-use Common\Traits\ValidatableTrait;
 
 /**
  * @root testModel
@@ -16,9 +13,6 @@ use Common\Traits\ValidatableTrait;
  * multi-line comment test
  */
 class NestedTestModel {
-    use MappableTrait;
-    use ConvertibleTrait;
-    use ValidatableTrait;
 
     /**
      * @var
