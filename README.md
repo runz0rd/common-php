@@ -12,31 +12,32 @@
 
 ## Annotations
 Heres a list of annotations we can use in models:
+
 | annotation   | used above  | description              |
-|--------------|:------------|:-------------------------|
+| :----------- | :---------- | :----------------------- |
 | @root        |  class      | Used to name the root of the element (XML) |
 | @var         |  property   | Used to declare the type of the property (validation). This is an alias for @rule annotation. See below for a list of pre-defined types (rules) for model validation |
 | @name        |  property   | Used to change the property name, if neccessary (can be used with special characters, but be careful if youre working with XML) |
-| @required    |  property   | Used to declare that a property is requried for a specific action (validation). Use without the action to make the property always required|
+| @required    |  property   | Used to declare that a property is requried for a specific action (validation). Use without the action to make the property always required |
 | @attribute   |  property   | Used to declare that a property is an attribute for the element (XML) |
 | @rule        |  property   | Used to enforce specific rules and filters on the property value (validation). You can use the predefined rules or create and import your own |
 
 **@var** annotation type list:
+
 | type      |  description              |
-|-----------|:--------------------------|
+| :-------- | :------------------------ |
 | string    | string type               |
 | integer   | integer type              |
 | boolean   | boolean type              |
 | array     | array type                |
 | []        | array type                |
-| object    | stdClass for example        |
+| object    | stdClass for example      |
 | string[]  | string array type         |
 | integer[] | integer array type        |
 | boolean[] | boolean array type        |
 | object[]  | object array type         |
-| NamedModel| any named class (model) (if from another namespace, make sure you include it!) |
-| NamedModel[]| any model array         |
-
+| NamedModel | any named class (model) (if from another namespace, make sure you include it!) |
+| NamedModel[] | any model array         |
 
 ## Usage
 
