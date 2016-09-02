@@ -7,17 +7,18 @@
  */
 
 namespace Common\Validator\Rules;
+use Common\Models\ModelProperty;
 use Common\Validator\IRule;
 use Common\Validator\ModelValidatorException;
 
 class IpRule implements IRule {
 
-    function getName() {
-        return 'IP';
+    function getNames() {
+        return ['IP'];
     }
 
-    function validate($value) {
-        if(filter_var($value, FILTER_VALIDATE_IP) === false) {
+    function validate(ModelProperty $property, array $params = []) {
+        if(filter_var($property->getPropertyValue(), FILTER_VALIDATE_IP) === false) {
             throw new ModelValidatorException('Value is not an IP.');
         }
     }

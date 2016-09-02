@@ -22,11 +22,11 @@ class ModelMapperTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @param $source
-     * @param $actualModel
+     * @param $expectedModel
      * @dataProvider validMapValues
      */
-	public function testMap($source, $actualModel) {
-		$expectedModel = $this->modelMapper->map($source, new TestModel());
+	public function testMap($source, $expectedModel) {
+        $actualModel = $this->modelMapper->map($source, new TestModel());
         $this->assertEquals($expectedModel, $actualModel);
 	}
 
@@ -41,13 +41,13 @@ class ModelMapperTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param $actualUnmappedModel
+     * @param $expectedObject
      * @param $model
      * @dataProvider validUnmapValues
      */
-    public function testUnmap($model, $actualUnmappedModel) {
-        $expectedUnmappedModel = $this->modelMapper->unmap($model);
-        $this->assertEquals($expectedUnmappedModel, $actualUnmappedModel);
+    public function testUnmap($model, $expectedObject) {
+        $actualObject = $this->modelMapper->unmap($model);
+        $this->assertEquals($expectedObject, $actualObject);
     }
 
     /**
@@ -74,8 +74,8 @@ class ModelMapperTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function validMapValues() {
-        $nestedJson = '{"noType":null,"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":null,"modelArray":[]}';
-        $json = '{"noType":null,"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
+        $nestedJson = '{"noType":null,"boolTrue":true,"boolFalse":false,"string":"a","namedString":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"requiredString":null,"alwaysRequiredBoolean":true,"multipleRequiredInteger":null,"attribute1":null,"emailRule":null,"multipleRules":null}';
+        $json = '{"noType":null,"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.', '.$nestedJson.'],"requiredString":null,"alwaysRequiredBoolean":true,"multipleRequiredInteger":null,"attribute1":null,"emailRule":null,"multipleRules":null}';
         $source = json_decode($json);
 
         $object = new stdClass();
@@ -94,7 +94,9 @@ class ModelMapperTest extends \PHPUnit_Framework_TestCase {
         $model->booleanArray = [true,true,false];
         $model->objectArray = [$object,$object,$object];
         $model->object = $object;
-        $nestedModel = clone $model;
+        $model->alwaysRequiredBoolean = true;
+        $nestedModel = new NestedTestModel();
+        $nestedModel->mapFromObject($model);
         $model->model = $nestedModel;
         $model->modelArray = [$nestedModel,$nestedModel];
 
@@ -116,9 +118,9 @@ class ModelMapperTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function validUnmapValues() {
-        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1}}';
-        $json = '{"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.','.$nestedJson.']}';
-        $unmappedModel = json_decode($json);
+        $nestedJson = '{"boolTrue":true,"boolFalse":false,"string":"a","namedString":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"alwaysRequiredBoolean":true}';
+        $json = '{"boolTrue":true,"boolFalse":false,"string":"a","namedString123":"named","integer":5,"array":[1,"a",3],"stringArray":["a","b","c"],"integerArray":[1,2,3],"booleanArray":[true,true,false],"objectArray":[{"a":1},{"a":1},{"a":1}],"object":{"a":1},"model":'.$nestedJson.',"modelArray":['.$nestedJson.', '.$nestedJson.'],"alwaysRequiredBoolean":true}';
+        $unmappedObject = json_decode($json);
 
         $object = new stdClass();
         $object->a = 1;
@@ -136,12 +138,14 @@ class ModelMapperTest extends \PHPUnit_Framework_TestCase {
         $model->booleanArray = [true,true,false];
         $model->objectArray = [$object,$object,$object];
         $model->object = $object;
-        $nestedModel = clone $model;
+        $model->alwaysRequiredBoolean = true;
+        $nestedModel = new NestedTestModel();
+        $nestedModel->mapFromObject($model);
         $model->model = $nestedModel;
         $model->modelArray = [$nestedModel,$nestedModel];
 
         return [
-            [$model, $unmappedModel]
+            [$model, $unmappedObject]
         ];
     }
 }

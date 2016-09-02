@@ -61,7 +61,8 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
         $model->requiredString = 'requiredString';
         $model->alwaysRequiredBoolean = false;
         $model->multipleRequiredInteger = 5;
-        $nestedModel = clone $model;
+        $nestedModel = new NestedTestModel();
+        $nestedModel->mapFromObject($model);
         $model->model = $nestedModel;
         $model->modelArray = [$nestedModel,$nestedModel];
         $model->emailRule = 'test@test.com';
@@ -95,7 +96,8 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
         $model->requiredString = 'requiredString';
         $model->alwaysRequiredBoolean = false;
         $model->multipleRequiredInteger = 5;
-        $nestedModel = clone $model;
+        $nestedModel = new NestedTestModel();
+        $nestedModel->mapFromObject($model);
         $model->model = $nestedModel;
         $model->modelArray = [$nestedModel,$nestedModel];
         $model->emailRule = 'test@test.com';

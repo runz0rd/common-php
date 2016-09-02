@@ -54,7 +54,7 @@ class ModelPropertyType {
 			$this->isModel = true;
 			$this->actualType = 'object';
 		}
-		if(strpos($this->annotatedType, '[]')) {
+		if(strpos($this->annotatedType, '[]') !== false) {
 			$this->actualType = 'array';
 		}
 	}

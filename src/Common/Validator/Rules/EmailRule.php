@@ -7,17 +7,18 @@
  */
 
 namespace Common\Validator\Rules;
+use Common\Models\ModelProperty;
 use Common\Validator\IRule;
 use Common\Validator\ModelValidatorException;
 
 class EmailRule implements IRule {
 
-    function getName() {
-        return 'email';
+    function getNames() {
+        return ['email'];
     }
 
-    function validate($value) {
-        if(filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+    function validate(ModelProperty $property, array $params = []) {
+        if(filter_var($property->getPropertyValue(), FILTER_VALIDATE_EMAIL) === false) {
             throw new ModelValidatorException('Value is not a valid email.');
         }
     }

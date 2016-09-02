@@ -8,6 +8,8 @@
  */
 namespace Common\Util;
 
+use Doctrine\Instantiator\Exception\InvalidArgumentException;
+
 class Validation {
 
 	/**
@@ -35,8 +37,8 @@ class Validation {
 	 */
 	public static function isCustomType(string $type) {
 		$result = true;
-		$simpleTypes = ['NULL', 'boolean', 'integer', 'double', 'string', 'array', 'object',
-			'boolean[]', 'integer[]', 'double[]', 'string[]', '[]', 'object[]'];
+		$simpleTypes = ['NULL', 'boolean', 'bool', 'int', 'integer', 'double', 'string', 'array', 'object', 'boolean[]',
+			'integer[]', 'double[]', 'string[]', '[]', 'object[]'];
 		foreach($simpleTypes as $simpleType) {
 			if($type == $simpleType) {
 				$result = false;
@@ -92,5 +94,41 @@ class Validation {
         }
 
 		return $value;
+	}
+
+	public static function validateArray($value) {
+		if(!is_array($value)) {
+			throw new InvalidArgumentException('Value is not an array.');
+		}
+	}
+
+	public static function validateBoolean($value) {
+		if(!is_bool($value)) {
+			throw new InvalidArgumentException('Value is not a boolean.');
+		}
+	}
+
+	public static function validateDouble($value) {
+		if(!is_double($value)) {
+			throw new InvalidArgumentException('Value is not a double.');
+		}
+	}
+
+	public static function validateInteger($value) {
+		if(!is_integer($value)) {
+			throw new InvalidArgumentException('Value is not an integer.');
+		}
+	}
+
+	public static function validateObject($value) {
+		if(!is_object($value)) {
+			throw new InvalidArgumentException('Value is not an object.');
+		}
+	}
+
+	public static function validateString($value) {
+		if(!is_string($value)) {
+			throw new InvalidArgumentException('Value is not a string.');
+		}
 	}
 }

@@ -25,10 +25,17 @@ class Iteration {
         }
         $sourceValue = $defaultValue;
         foreach($source as $key => $value) {
-            if($name == $key && !Validation::isEmpty($value)) {
+            if($name === $key && !Validation::isEmpty($value)) {
                 $sourceValue = $value;
                 break;
             }
+            if(is_array($value) || is_object($value)) {
+                $sourceValue = self::findValueByName($name, $value, $defaultValue);
+                if($sourceValue !== $defaultValue) {
+                    break;
+                }
+            }
+
         }
 
         return $sourceValue;
@@ -105,6 +112,22 @@ class Iteration {
         $result = null;
         foreach($haystackArray as $haystack) {
             if(strpos($haystack, $needle) !== false) {
+                $result = $haystack;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $haystackArray
+     * @param string $regex
+     * @return string|null
+     */
+    public static function regexArray(array $haystackArray, string $regex) {
+        $result = null;
+        foreach($haystackArray as $haystack) {
+            if(preg_match($regex, $haystack, $matches)) {
                 $result = $haystack;
             }
         }

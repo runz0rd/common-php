@@ -8,34 +8,55 @@
  */
 namespace Common\Models;
 
+use Common\Util\Validation;
+
 class DocBlock {
 
 	/**
 	 * @var array
 	 */
-	private $annotations;
+	private $annotations = [];
+
+	/**
+	 * @var array
+	 */
+	private $comments = [];
 
 	/**
 	 * DocBlock constructor.
 	 * Copied from PHPUnit 3.7.29 Util/Test.php
 	 * @param string $docBlock
 	 */
-	public function __construct(string $docBlock) {
-		$annotations = array();
-		// Strip away the docblock header and footer
-		// to ease parsing of one line annotations
-		$docBlock = substr($docBlock, 3, -2);
+	public function __construct(string $docBlock = null) {
+		if(!Validation::isEmpty($docBlock)) {
+			$annotations = array();
+			$comments = array();
 
-		$re = '/@(?P<name>[A-Za-z_-]+)(?:[ \t]+(?P<value>.*?))?[ \t]*\r?$/m';
-		if (preg_match_all($re, $docBlock, $matches)) {
-			$numMatches = count($matches[0]);
+			// Strip away the docblock header and footer
+			// to ease parsing of one line annotations
+			$docBlock = substr($docBlock, 3, -2);
 
-			for ($i = 0; $i < $numMatches; ++$i) {
-				$annotations[$matches['name'][$i]][] = $matches['value'][$i];
+			$re = '/@(?P<name>[A-Za-z_-]+)(?:[ \t]+(?P<value>.*?))?[ \t]*\r?$/m';
+			if (preg_match_all($re, $docBlock, $matches)) {
+				$numMatches = count($matches[0]);
+
+				for ($i = 0; $i < $numMatches; ++$i) {
+					$annotations[$matches['name'][$i]][] = $matches['value'][$i];
+				}
 			}
-		}
 
-		$this->annotations = $annotations;
+			$re = '/\*\s?([^@*]*)\r/';
+			if (preg_match_all($re, $docBlock, $matches) && isset($matches[1])) {
+				$numMatches = count($matches[1]);
+
+				for ($i = 0; $i < $numMatches; ++$i) {
+					$comments[] = $matches[1][$i];
+				}
+			}
+
+			$this->comments = $comments;
+			$this->annotations = $annotations;
+		}
 	}
 
 	/**
@@ -80,5 +101,12 @@ class DocBlock {
 	 */
 	public function getAnnotations() {
 		return $this->annotations;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getComments() {
+		return $this->comments;
 	}
 }

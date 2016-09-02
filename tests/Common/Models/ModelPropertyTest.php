@@ -37,7 +37,8 @@ class ModelPropertyTest extends PHPUnit_Framework_TestCase {
         $model->requiredString = 'requiredString';
         $model->alwaysRequiredBoolean = false;
         $model->multipleRequiredInteger = 5;
-        $nestedModel = clone $model;
+        $nestedModel = new NestedTestModel();
+        $nestedModel->mapFromObject($model);
         $model->model = $nestedModel;
         $model->modelArray = [$nestedModel,$nestedModel];
 
@@ -135,8 +136,8 @@ class ModelPropertyTest extends PHPUnit_Framework_TestCase {
      * @param $requiredTypes
      * @dataProvider validValues
      */
-    public function testGetRequiredTypes($index, $value, $name, $propertyName, $annotatedName, $isRequired, $requiredTypes) {
-        $expected = $this->modelProperties[$index]->getRequiredTypes();
+    public function testGetRequiredActions($index, $value, $name, $propertyName, $annotatedName, $isRequired, $requiredTypes) {
+        $expected = $this->modelProperties[$index]->getRequiredActions();
         $this->assertEquals($expected, $requiredTypes);
     }
 
@@ -160,7 +161,8 @@ class ModelPropertyTest extends PHPUnit_Framework_TestCase {
         $model->requiredString = 'requiredString';
         $model->alwaysRequiredBoolean = false;
         $model->multipleRequiredInteger = 5;
-        $nestedModel = clone $model;
+        $nestedModel = new NestedTestModel();
+        $nestedModel->mapFromObject($model);
         $model->model = $nestedModel;
         $model->modelArray = [$nestedModel,$nestedModel];
 
@@ -179,7 +181,7 @@ class ModelPropertyTest extends PHPUnit_Framework_TestCase {
             [11, $model->object, 'object', 'object', '', false, []],
             [12, $model->model, 'model', 'model', '', false, []],
             [13, $model->modelArray, 'modelArray', 'modelArray', '', false, []],
-            [14, $model->requiredString, 'requiredString', 'requiredString', '', true, ['requiredString']],
+            [14, $model->requiredString, 'requiredString', 'requiredString', '', true, ['requiredString', 'testRequired']],
             [15, $model->alwaysRequiredBoolean, 'alwaysRequiredBoolean', 'alwaysRequiredBoolean', '', true, ['']],
             [16, $model->multipleRequiredInteger, 'multipleRequiredInteger', 'multipleRequiredInteger', '', true, ['requiredInteger', 'testRequired']],
         ];

@@ -11,13 +11,13 @@ use Common\Models\ModelProperty;
 use Common\Util\Validation;
 use Common\Validator\IRule;
 
-class StringRule implements IRule {
+class BooleanRule implements IRule {
 
     function getNames() {
-        return ['string'];
+        return ['bool', 'boolean'];
     }
 
     function validate(ModelProperty $property, array $params = []) {
-        Validation::validateString($property->getPropertyValue());
+        Validation::validateBoolean($property->getPropertyValue());
     }
 }

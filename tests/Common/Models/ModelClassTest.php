@@ -33,7 +33,8 @@ class ModelClassTest extends PHPUnit_Framework_TestCase {
         $model->booleanArray = [true,true,false];
         $model->objectArray = [$object,$object,$object];
         $model->object = $object;
-        $nestedModel = clone $model;
+        $nestedModel = new NestedTestModel();
+        $nestedModel->mapFromObject($model);
         $model->model = $nestedModel;
         $model->modelArray = [$nestedModel,$nestedModel];
 

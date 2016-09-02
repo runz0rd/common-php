@@ -41,6 +41,9 @@ class ModelClass {
 	 * @param object $model
 	 */
 	public function __construct($model) {
+		if(!is_object($model)) {
+			throw new \InvalidArgumentException('A model must be an object.');
+		}
 		$reflectionClass = new \ReflectionClass($model);
 		$this->docBlock = new DocBlock($reflectionClass->getDocComment());
 		$this->className = $reflectionClass->getName();
@@ -57,6 +60,7 @@ class ModelClass {
         }
 
 		foreach($properties as $property) {
+			$property->setAccessible(true);
 			$modelProperty = new ModelProperty($property, $model, $this->namespace);
 			if(!$modelProperty->getDocBlock()->hasAnnotation('internal')) {
 				$this->properties[] = $modelProperty;

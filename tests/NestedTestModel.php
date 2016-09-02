@@ -15,7 +15,7 @@ use Common\Traits\ValidatableTrait;
  * Class TestModel
  * multi-line comment test
  */
-class TestModel {
+class NestedTestModel {
     use MappableTrait;
     use ConvertibleTrait;
     use ValidatableTrait;
@@ -41,14 +41,11 @@ class TestModel {
     public $string;
 
     /**
-     * @name namedString123
      * @var string
      */
     public $namedString;
 
     /**
-     * testing the multiline comments
-     * right here
      * @var integer
      */
     public $integer;
@@ -82,16 +79,6 @@ class TestModel {
      * @var object
      */
     public $object;
-
-    /**
-     * @var NestedTestModel
-     */
-    public $model;
-
-    /**
-     * @var NestedTestModel[]
-     */
-    public $modelArray;
 
     /**
      * @required requiredString

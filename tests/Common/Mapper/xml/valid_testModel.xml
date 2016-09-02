@@ -33,7 +33,7 @@
         <boolTrue>true</boolTrue>
         <boolFalse>false</boolFalse>
         <string>a</string>
-        <namedString123>named</namedString123>
+        <namedString>named</namedString>
         <integer>5</integer>
         <array>1</array>
         <array>a</array>
@@ -67,7 +67,7 @@
         <boolTrue>true</boolTrue>
         <boolFalse>false</boolFalse>
         <string>a</string>
-        <namedString123>named</namedString123>
+        <namedString>named</namedString>
         <integer>5</integer>
         <array>1</array>
         <array>a</array>
@@ -101,7 +101,7 @@
         <boolTrue>true</boolTrue>
         <boolFalse>false</boolFalse>
         <string>a</string>
-        <namedString123>named</namedString123>
+        <namedString>named</namedString>
         <integer>5</integer>
         <array>1</array>
         <array>a</array>

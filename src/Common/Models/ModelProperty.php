@@ -39,7 +39,7 @@ class ModelProperty {
 	/**
 	 * @var array
 	 */
-	private $requiredTypes;
+	private $requiredActions;
 
 	/**
 	 * @var \ReflectionProperty
@@ -82,10 +82,10 @@ class ModelProperty {
 		$this->type = new ModelPropertyType($propertyType, $annotatedType, $parentNS);
 
 		$this->isRequired = false;
-        $this->requiredTypes = [];
+        $this->requiredActions = [];
 		if($this->docBlock->hasAnnotation('required')) {
 			$this->isRequired = true;
-			$this->requiredTypes = $this->docBlock->getAnnotation('required');
+			$this->requiredActions = $this->docBlock->getAnnotation('required');
 		}
 	}
 
@@ -159,9 +159,9 @@ class ModelProperty {
 	/**
 	 * @return array
 	 */
-	public function getRequiredTypes()
+	public function getRequiredActions()
 	{
-		return $this->requiredTypes;
+		return $this->requiredActions;
 	}
 
 	/**

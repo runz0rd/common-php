@@ -38,7 +38,8 @@ class ModelPropertyTypeTest extends PHPUnit_Framework_TestCase {
         $model->requiredString = 'requiredString';
         $model->alwaysRequiredBoolean = false;
         $model->multipleRequiredInteger = 5;
-        $nestedModel = clone $model;
+        $nestedModel = new NestedTestModel();
+        $nestedModel->mapFromObject($model);
         $model->model = $nestedModel;
         $model->modelArray = [$nestedModel,$nestedModel];
 
@@ -123,8 +124,8 @@ class ModelPropertyTypeTest extends PHPUnit_Framework_TestCase {
             [9, false, 'array', 'boolean[]', 'array', ''],
             [10, false, 'array', 'object[]', 'array', ''],
             [11, false, 'object', 'object', 'object', ''],
-            [12, true, 'object', 'TestModel', 'object', '\TestModel'],
-            [13, true, 'array', 'TestModel[]', 'array', '\TestModel'],
+            [12, true, 'object', 'NestedTestModel', 'object', '\NestedTestModel'],
+            [13, true, 'array', 'NestedTestModel[]', 'array', '\NestedTestModel'],
             [14, false, 'string', 'string', 'string', ''],
             [15, false, 'boolean', 'boolean', 'boolean', ''],
             [16, false, 'integer', 'integer', 'integer', '']

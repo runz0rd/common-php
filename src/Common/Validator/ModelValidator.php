@@ -30,6 +30,8 @@ class ModelValidator {
 			throw new \InvalidArgumentException('Invalid object supplied for validation.');
 		}
 
+		$this->useRules(__DIR__ . '\Rules');
+
 		$modelClass = new ModelClass($object);
 		foreach($modelClass->getProperties() as $property) {
 			$this->validateProperty($property, $validationRequiredType);
@@ -45,14 +47,13 @@ class ModelValidator {
             @require_once $filename;
             $className = basename($filename, ".php");
             $autoloaded = get_declared_classes();
-            $class = Iteration::strposArray($autoloaded, $className);
+            $className = Iteration::strposArray($autoloaded, $className);
 
-            if(!is_null($class)) {
+            if(!is_null($className)) {
                 /** @var IRule $rule */
-                $rule = new $class;
-                if ($rule instanceof IRule) {
-                    $ruleName = strtolower($rule->getName());
-                    $this->rules[$ruleName] = $rule;
+                $rule = new $className;
+                if($rule instanceof IRule) {
+                   $this->useRule($rule);
                 }
             }
         }
@@ -62,8 +63,9 @@ class ModelValidator {
      * @param IRule $rule
      */
     public function useRule(IRule $rule) {
-        $ruleName = strtolower($rule->getName());
-        $this->rules[$ruleName] = $rule;
+	    foreach($rule->getNames() as $name) {
+		    $this->rules[strtolower($name)] = $rule;
+	    }
     }
 
     /**
@@ -74,21 +76,23 @@ class ModelValidator {
         if(!is_null($property->getPropertyValue()) && $property->getDocBlock()->hasAnnotation('rule')) {
             $definedRules = $property->getDocBlock()->getAnnotation('rule');
             foreach($definedRules as $definedRule) {
-                $ruleName = strtolower($definedRule);
-                if(!isset($this->rules[$ruleName])) {
-                    continue;
-                }
-                $rule = $this->rules[strtolower($definedRule)];
-                try {
-                    $rule->validate($property->getPropertyValue());
-                }
-                catch(\Exception $ex) {
-                    $message = 'Error while validating ' . $property->getParentClassName() . '::' . $property->getPropertyName() . '. ' . $ex->getMessage();
-                    throw new ModelValidatorException($message);
-                }
+                $this->validateRule(strtolower($definedRule), $property);
             }
         }
     }
+
+	protected function validateRule($ruleName, ModelProperty $property) {
+		if(isset($this->rules[$ruleName])) {
+			$rule = $this->rules[$ruleName];
+			try {
+				$rule->validate($property);
+			}
+			catch(\Exception $ex) {
+				$message = 'Error while validating ' . $property->getParentClassName() . '::' . $property->getPropertyName() . '. ' . $ex->getMessage();
+				throw new ModelValidatorException($message);
+			}
+		}
+	}
 
 	/**
 	 * @param ModelProperty $property
@@ -135,7 +139,7 @@ class ModelValidator {
 		if(!$property->isRequired() && $expectedType != 'NULL' && $actualType != 'NULL') {
 			$this->assertPropertyType($expectedType, $actualType, $property);
 		}
-		if($property->isRequired() && $expectedType != 'NULL' && array_search($requiredType, $property->getRequiredTypes()) !== false) {
+		if($property->isRequired() && $expectedType != 'NULL' && array_search($requiredType, $property->getRequiredActions()) !== false) {
 			$this->assertPropertyType($expectedType, $actualType, $property);
 		}
 	}
@@ -149,7 +153,7 @@ class ModelValidator {
 		$expectedRequired = $property->isRequired();
 		$actualRequired = !Validation::isEmpty($property->getPropertyValue());
 
-		foreach($property->getRequiredTypes() as $expectedRequiredType) {
+		foreach($property->getRequiredActions() as $expectedRequiredType) {
 			if($expectedRequiredType == $requiredType || $expectedRequiredType == '') {
 				$this->assertRequiredProperty($expectedRequired, $actualRequired, $property);
 			}
