@@ -43,11 +43,12 @@ class ModelValidator {
      * @param string $location
      */
 	public function useRules(string $location = __DIR__ . '\Rules') {
-        foreach(glob($location . '\*.php') as $filename) {
-            @require_once $filename;
-            $className = basename($filename, ".php");
+		$files = glob($location . '\*.php');
+        foreach($files as $file) {
+            @require_once $file;
+	        $filename = basename($file, ".php");
             $autoloaded = get_declared_classes();
-            $className = Iteration::strposArray($autoloaded, $className);
+            $className = Iteration::regexArray($autoloaded, "/\\\\$filename$/");
 
             if(!is_null($className)) {
                 /** @var IRule $rule */
@@ -76,16 +77,22 @@ class ModelValidator {
         if(!is_null($property->getPropertyValue()) && $property->getDocBlock()->hasAnnotation('rule')) {
             $definedRules = $property->getDocBlock()->getAnnotation('rule');
             foreach($definedRules as $definedRule) {
-                $this->validateRule(strtolower($definedRule), $property);
+	            $ruleName = strtolower($definedRule);
+	            $params = [];
+				if(preg_match('/(.*)\((.*)\)/', $definedRule, $matches)) {
+					$ruleName = trim($matches[1]);
+					$params = array_map('trim', explode(",", $matches[2]));
+				}
+                $this->validateRule($property, $ruleName, $params);
             }
         }
     }
 
-	protected function validateRule($ruleName, ModelProperty $property) {
+	protected function validateRule(ModelProperty $property, $ruleName, array $params = []) {
 		if(isset($this->rules[$ruleName])) {
 			$rule = $this->rules[$ruleName];
 			try {
-				$rule->validate($property);
+				$rule->validate($property, $params);
 			}
 			catch(\Exception $ex) {
 				$message = 'Error while validating ' . $property->getParentClassName() . '::' . $property->getPropertyName() . '. ' . $ex->getMessage();
@@ -99,14 +106,14 @@ class ModelValidator {
 	 * @param string $requiredType
 	 */
 	protected function validateProperty(ModelProperty $property, string $requiredType) {
-		if($property->isRequired()) {
-			$this->validateRequiredProperty($property, $requiredType);
+		if($property->getDocBlock()->hasAnnotation('var') && !is_null($property->getPropertyValue())) {
+			$this->validateRule($property, $property->getType()->getActualType());
 		}
-		$this->validatePropertyType($property, $requiredType);
-        $this->validateRules($property);
+		$this->validateRule($property, 'required', [$requiredType]);
+		$this->validateRules($property);
 
-		if($property->getType()->isModel()) {
-		    $this->validateModelProperty($property->getPropertyValue(), $requiredType);
+		if($property->getType()->isModel() && !Validation::isEmpty($property->getPropertyValue())) {
+			$this->validateModelProperty($property->getPropertyValue(), $requiredType);
 		}
 	}
 
@@ -115,72 +122,13 @@ class ModelValidator {
 	 * @param string $requiredType
 	 */
 	protected function validateModelProperty($propertyValue, string $requiredType) {
-		if(!Validation::isEmpty($propertyValue)) {
-            if(is_array($propertyValue)) {
-                foreach($propertyValue as $value) {
-                    $this->validate($value, $requiredType);
-                }
+        if(is_array($propertyValue)) {
+            foreach($propertyValue as $value) {
+                $this->validate($value, $requiredType);
             }
-            if(is_object($propertyValue)) {
-                $this->validate($propertyValue, $requiredType);
-            }
-		}
-	}
-
-	/**
-	 * @param ModelProperty $property
-	 * @param string $requiredType
-	 * @throws ModelValidatorException
-	 */
-	protected function validatePropertyType(ModelProperty $property, string $requiredType) {
-		$expectedType = $property->getType()->getActualType();
-		$actualType = gettype($property->getPropertyValue());
-
-		if(!$property->isRequired() && $expectedType != 'NULL' && $actualType != 'NULL') {
-			$this->assertPropertyType($expectedType, $actualType, $property);
-		}
-		if($property->isRequired() && $expectedType != 'NULL' && array_search($requiredType, $property->getRequiredActions()) !== false) {
-			$this->assertPropertyType($expectedType, $actualType, $property);
-		}
-	}
-
-	/**
-	 * @param ModelProperty $property
-	 * @param string $requiredType
-	 * @throws ModelValidatorException
-	 */
-	protected function validateRequiredProperty(ModelProperty $property, string $requiredType) {
-		$expectedRequired = $property->isRequired();
-		$actualRequired = !Validation::isEmpty($property->getPropertyValue());
-
-		foreach($property->getRequiredActions() as $expectedRequiredType) {
-			if($expectedRequiredType == $requiredType || $expectedRequiredType == '') {
-				$this->assertRequiredProperty($expectedRequired, $actualRequired, $property);
-			}
-		}
-	}
-
-    /**
-     * @param string $expected
-     * @param string $actual
-     * @param ModelProperty $property
-     * @throws ModelValidatorException
-     */
-	protected function assertPropertyType(string $expected, string $actual, ModelProperty $property) {
-		if($expected != $actual) {
-			throw new ModelValidatorException('Expecting ' . $expected . ' type but got ' . $actual . ' while validating ' . $property->getParentClassName() . '::' . $property->getPropertyName());
-		}
-	}
-
-	/**
-	 * @param bool $expected
-	 * @param bool $actual
-	 * @param ModelProperty $property
-	 * @throws ModelValidatorException
-	 */
-	protected function assertRequiredProperty(bool $expected, bool $actual, ModelProperty $property) {
-		if($expected != $actual) {
-			throw new ModelValidatorException('Required property ' . $property->getParentClassName() . '::' . $property->getPropertyName() . ' not set.');
-		}
+        }
+        if(is_object($propertyValue)) {
+            $this->validate($propertyValue, $requiredType);
+        }
 	}
 }

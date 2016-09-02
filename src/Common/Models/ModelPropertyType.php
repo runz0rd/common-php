@@ -53,9 +53,10 @@ class ModelPropertyType {
 		if(Validation::isCustomType($this->annotatedType)) {
 			$this->isModel = true;
 			$this->actualType = 'object';
-		}
-		if(strpos($this->annotatedType, '[]') !== false) {
-			$this->actualType = 'array';
+
+			if(strpos($this->annotatedType, '[]') !== false) {
+				$this->actualType = 'array';
+			}
 		}
 	}
 

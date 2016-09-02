@@ -19,8 +19,8 @@ class RequiredRule implements IRule {
     }
 
     function validate(ModelProperty $property, array $params = []) {
-        if(isset($params['requiredAction']) && $property->isRequired()) {
-            $requiredAction = $params['requiredAction'];
+        if(isset($params[0]) && $property->isRequired()) {
+            $requiredAction = $params[0];
 
             foreach($property->getRequiredActions() as $propertyRequiredAction) {
                 if($propertyRequiredAction === $requiredAction || $propertyRequiredAction == '') {

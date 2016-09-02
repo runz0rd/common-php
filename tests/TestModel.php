@@ -120,7 +120,7 @@ class TestModel {
     public $attribute1;
 
     /**
-     * @rule email
+     * @rule email(10, 99, asdf)
      */
     public $emailRule;
 

@@ -26,7 +26,6 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
      * @dataProvider validModels
      */
     public function testValidateWithRules($validModel, $requiredType) {
-        $this->modelValidator->useRules();
         $this->modelValidator->validate($validModel, $requiredType);
     }
 
@@ -37,7 +36,6 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
      * @expectedException Exception
      */
     public function testValidateWithRulesFail($invalidModel, $requiredType) {
-        $this->modelValidator->useRules();
         $this->modelValidator->validate($invalidModel, $requiredType);
     }
 
@@ -110,7 +108,7 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
         $invalidModel2->string = 5;
 
         $invalidModel3 = clone $model;
-        $invalidModel3->integer = '3';
+        $invalidModel3->integer = '3as';
 
         $invalidModel4 = clone $model;
         $invalidModel4->array = true;
@@ -157,6 +155,18 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
         $invalidModel18 = clone $model;
         $invalidModel18->multipleRules = 3;
 
+        $invalidModel19 = clone $model;
+        $invalidModel19->stringArray = [3];
+
+        $invalidModel20 = clone $model;
+        $invalidModel20->integerArray = [3,'asd'];
+
+        $invalidModel21 = clone $model;
+        $invalidModel21->booleanArray = [true,'asd'];
+
+        $invalidModel22 = clone $model;
+        $invalidModel22->objectArray = [new stdClass(),'asd'];
+
         return [
             [$invalidModel1, ''],
             [$invalidModel2, ''],
@@ -178,7 +188,11 @@ class ModelValidatorTest extends PHPUnit_Framework_TestCase {
             [$invalidModel15, 'testRequired'],
             [$invalidModel16, 'testRequired'],
             [$invalidModel17, ''],
-            [$invalidModel18, '']
+            [$invalidModel18, ''],
+            [$invalidModel19, ''],
+            [$invalidModel20, ''],
+            [$invalidModel21, ''],
+            [$invalidModel22, '']
         ];
     }
 }
