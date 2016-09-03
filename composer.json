@@ -1,5 +1,5 @@
 {
-    "name": "milos-pejanovic/common-php",
+    "name": "runz0rd/common-php",
     "description": "My collection of common libraries for php.",
     "keywords": ["common", "library", "php", "helpers", "utilities"],
     "license": "MIT",
@@ -12,8 +12,9 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/milos-pejanovic/common-php/issues"
+        "issues": "https://github.com/runz0rd/common-php/issues"
     },
+    "minimum-stability" : "dev",
     "require": {
         "php": ">=7.0.1"
     },
