@@ -8,6 +8,7 @@
 
 namespace Common\ModelReflection;
 use Common\Util\Validation;
+use Common\ModelReflection\Enum\AnnotationEnum;
 
 class ModelClass {
 

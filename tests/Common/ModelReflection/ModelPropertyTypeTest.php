@@ -128,7 +128,7 @@ class ModelPropertyTypeTest extends PHPUnit_Framework_TestCase {
 
     public function validValues() {
         return [
-            [0, false, 'NULL', 'NULL', 'NULL', ''],
+            [0, false, 'NULL', 'any', 'any', ''],
             [1, false, 'boolean', 'boolean', 'boolean', ''],
             [2, false, 'boolean', 'boolean', 'boolean', ''],
             [3, false, 'string', 'string', 'string', ''],

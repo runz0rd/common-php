@@ -8,6 +8,8 @@
 
 namespace Common\ModelReflection;
 use Common\Util\Validation;
+use Common\ModelReflection\Enum\TypeEnum;
+use Common\ModelReflection\Enum\AnnotationEnum;
 
 class ModelProperty {
 
