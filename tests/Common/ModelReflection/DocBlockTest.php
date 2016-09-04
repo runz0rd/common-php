@@ -6,7 +6,7 @@
  * Date: 8/4/2016
  * Time: 11:10 PM
  */
-use Common\Models\DocBlock;
+use Common\ModelReflection\DocBlock;
 
 class DocBlockTest extends PHPUnit_Framework_TestCase {
 

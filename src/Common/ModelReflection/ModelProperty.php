@@ -6,7 +6,7 @@
  * Time: 3:50 PM
  */
 
-namespace Common\Models;
+namespace Common\ModelReflection;
 use Common\Util\Validation;
 
 class ModelProperty {
@@ -70,22 +70,22 @@ class ModelProperty {
 		$this->parentClassName = get_class($parent);
 
 		$this->propertyName = $property->getName();
-		if($this->docBlock->hasAnnotation('name')) {
-			$this->annotatedName = $this->docBlock->getFirstAnnotation('name');
+		if($this->docBlock->hasAnnotation(AnnotationEnum::NAME)) {
+			$this->annotatedName = $this->docBlock->getFirstAnnotation(AnnotationEnum::NAME);
 		}
 
 		$propertyType = gettype($this->property->getValue($parent));
-		$annotatedType = 'NULL';
-		if($this->docBlock->hasAnnotation('var') && !Validation::isEmpty($this->docBlock->getFirstAnnotation('var'))) {
-			$annotatedType = $this->docBlock->getFirstAnnotation('var');
+		$annotatedType = TypeEnum::ANY;
+		if($this->docBlock->hasAnnotation(AnnotationEnum::VAR) && !Validation::isEmpty($this->docBlock->getFirstAnnotation(AnnotationEnum::VAR))) {
+			$annotatedType = $this->docBlock->getFirstAnnotation(AnnotationEnum::VAR);
 		}
 		$this->type = new ModelPropertyType($propertyType, $annotatedType, $parentNS);
 
 		$this->isRequired = false;
         $this->requiredActions = [];
-		if($this->docBlock->hasAnnotation('required')) {
+		if($this->docBlock->hasAnnotation(AnnotationEnum::REQUIRED)) {
 			$this->isRequired = true;
-			$this->requiredActions = $this->docBlock->getAnnotation('required');
+			$this->requiredActions = $this->docBlock->getAnnotation(AnnotationEnum::REQUIRED);
 		}
 	}
 

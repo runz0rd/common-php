@@ -6,7 +6,7 @@
  * Time: 1:30 PM
  */
 
-namespace Common\Models;
+namespace Common\ModelReflection;
 use Common\Util\Validation;
 
 class ModelClass {
@@ -50,8 +50,8 @@ class ModelClass {
 		$this->namespace = $reflectionClass->getNamespaceName();
 
 		$this->rootName = lcfirst($reflectionClass->getShortName());
-		if($this->docBlock->hasAnnotation('root') && !Validation::isEmpty($this->docBlock->getAnnotation('root'))) {
-			$this->rootName = $this->docBlock->getFirstAnnotation('root');
+		if($this->docBlock->hasAnnotation(AnnotationEnum::ROOT) && !Validation::isEmpty($this->docBlock->getAnnotation(AnnotationEnum::ROOT))) {
+			$this->rootName = $this->docBlock->getFirstAnnotation(AnnotationEnum::ROOT);
 		}
 
 		$properties = $reflectionClass->getProperties();
@@ -62,9 +62,7 @@ class ModelClass {
 		foreach($properties as $property) {
 			$property->setAccessible(true);
 			$modelProperty = new ModelProperty($property, $model, $this->namespace);
-			if(!$modelProperty->getDocBlock()->hasAnnotation('internal')) {
-				$this->properties[] = $modelProperty;
-			}
+            $this->properties[] = $modelProperty;
 		}
 	}
 

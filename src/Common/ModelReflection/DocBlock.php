@@ -6,7 +6,7 @@
  * Date: 6/10/2016
  * Time: 10:16 AM
  */
-namespace Common\Models;
+namespace Common\ModelReflection;
 
 use Common\Util\Validation;
 

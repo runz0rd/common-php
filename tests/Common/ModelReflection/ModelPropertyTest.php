@@ -7,8 +7,8 @@
  * Time: 9:13 AM
  */
 
-use Common\Models\ModelClass;
-use Common\Models\ModelProperty;
+use Common\ModelReflection\ModelClass;
+use Common\ModelReflection\ModelProperty;
 
 class ModelPropertyTest extends PHPUnit_Framework_TestCase {
 

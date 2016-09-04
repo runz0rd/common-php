@@ -6,9 +6,7 @@
  * Time: 9:05 AM
  */
 
-namespace Common\Models;
-
-
+namespace Common\ModelReflection;
 use Common\Util\Validation;
 
 class ModelPropertyType {
@@ -52,10 +50,10 @@ class ModelPropertyType {
 		$this->actualType = $this->annotatedType;
 		if(Validation::isCustomType($this->annotatedType)) {
 			$this->isModel = true;
-			$this->actualType = 'object';
+			$this->actualType = TypeEnum::OBJECT;
 
 			if(strpos($this->annotatedType, '[]') !== false) {
-				$this->actualType = 'array';
+				$this->actualType = TypeEnum::ARRAY;
 			}
 		}
 	}
