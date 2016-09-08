@@ -12,20 +12,21 @@ class Directory {
 
     /**
      * @param $directory
-     * @param array $results
+     * @param $extension
      * @return array
      */
-    public static function scan($directory, &$results = array()){
+    public static function scan($directory, $extension){
         $files = scandir($directory);
-
+        $results = [];
         foreach($files as $key => $value){
             $path = realpath($directory . DIRECTORY_SEPARATOR . $value);
             if(!is_dir($path)) {
-                if(preg_match('/.php$/', $path)) {
+                if(preg_match('/.'.$extension.'$/', $path)) {
                     $results[] = $path;
                 }
-            } else if($value != "." && $value != "..") {
-                self::scan($path, $results);
+            }
+            else if($value != "." && $value != "..") {
+                $results = array_merge($results, self::scan($path, $extension));
             }
         }
 
