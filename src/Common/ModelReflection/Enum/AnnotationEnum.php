@@ -13,7 +13,7 @@ class AnnotationEnum {
     const NAME = 'name';
     const REQUIRED = 'required';
     const RULE = 'rule';
-    const ROOT = 'root';
+    const XML_ROOT = 'xmlRoot';
     const XML_ATTRIBUTE = 'xmlAttribute';
     const XML_NODE_VALUE = 'xmlNodeValue';
 }

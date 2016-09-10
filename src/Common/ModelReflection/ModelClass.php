@@ -51,8 +51,8 @@ class ModelClass {
 		$this->namespace = $reflectionClass->getNamespaceName();
 
 		$this->rootName = lcfirst($reflectionClass->getShortName());
-		if($this->docBlock->hasAnnotation(AnnotationEnum::ROOT) && !Validation::isEmpty($this->docBlock->getAnnotation(AnnotationEnum::ROOT))) {
-			$this->rootName = $this->docBlock->getFirstAnnotation(AnnotationEnum::ROOT);
+		if($this->docBlock->hasAnnotation(AnnotationEnum::XML_ROOT) && !Validation::isEmpty($this->docBlock->getAnnotation(AnnotationEnum::XML_ROOT))) {
+			$this->rootName = $this->docBlock->getFirstAnnotation(AnnotationEnum::XML_ROOT);
 		}
 
 		$properties = $reflectionClass->getProperties();

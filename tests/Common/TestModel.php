@@ -8,7 +8,7 @@
  */
 
 /**
- * @root testModel
+ * @xmlRoot testModel
  * Class TestModel
  * multi-line comment test
  */
