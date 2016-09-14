@@ -59,4 +59,13 @@ class Xml {
 
         return $result;
     }
+
+	/**
+	 * Removes extra whitespace, tabs and new lines between tags
+	 * @param string $xml
+	 * @return string
+	 */
+	public static function format(string $xml) {
+		return preg_replace('/>\s*</', '><', $xml);
+	}
 }
