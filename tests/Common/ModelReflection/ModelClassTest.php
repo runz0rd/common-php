@@ -82,6 +82,20 @@ class ModelClassTest extends PHPUnit_Framework_TestCase {
         $modelClass = new ModelClass($invalidModel);
     }
 
+    public function testInstantiate() {
+        $expected = new TestModel();
+        $actual = ModelClass::instantiate('\TestModel');
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testInstantiateFail() {
+        $expected = new TestModel();
+        $actual = ModelClass::instantiate('Asd\TestModel');
+    }
+
     public function invalidModels() {
         return [
             [new stdClass()],

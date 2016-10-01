@@ -106,4 +106,16 @@ class ModelClass {
 	{
 		return $this->docBlock;
 	}
+
+	public static function instantiate(string $modelClassName) {
+	    try {
+            $reflectionClass = new \ReflectionClass($modelClassName);
+            $model = $reflectionClass->newInstanceWithoutConstructor();
+        }
+        catch(\Exception $ex) {
+            throw new \InvalidArgumentException('Could not instantiate model ' . $modelClassName . '. ' . $ex->getMessage());
+        }
+
+        return $model;
+    }
 }
