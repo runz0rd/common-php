@@ -20,7 +20,7 @@ class ModelClassTest extends PHPUnit_Framework_TestCase {
         $object = new stdClass();
         $object->a = 1;
 
-        $model = new TestModel();
+        $model = new \TestModel();
         $model->noType = null;
         $model->boolTrue = true;
         $model->boolFalse = false;
@@ -34,7 +34,7 @@ class ModelClassTest extends PHPUnit_Framework_TestCase {
         $model->objectArray = [$object,$object,$object];
         $model->object = $object;
 
-        $nestedModel = new NestedTestModel();
+        $nestedModel = new \NestedTestModel();
         $nestedModel->noType = null;
         $nestedModel->boolTrue = true;
         $nestedModel->boolFalse = false;
@@ -83,7 +83,7 @@ class ModelClassTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testInstantiate() {
-        $expected = new TestModel();
+        $expected = new \TestModel();
         $actual = ModelClass::instantiate('\TestModel');
         $this->assertEquals($expected, $actual);
     }
@@ -92,7 +92,7 @@ class ModelClassTest extends PHPUnit_Framework_TestCase {
      * @expectedException Exception
      */
     public function testInstantiateFail() {
-        $expected = new TestModel();
+        $expected = new \TestModel();
         $actual = ModelClass::instantiate('Asd\TestModel');
     }
 
