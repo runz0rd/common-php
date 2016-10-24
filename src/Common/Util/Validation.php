@@ -75,7 +75,7 @@ class Validation {
 	 */
 	public static function filterInteger($value) {
 		$intValue = filter_var($value, FILTER_VALIDATE_INT);
-		if($intValue !== false && !is_bool($value)) {
+		if($intValue !== false && is_string($value)) {
             $value = $intValue;
 		}
 
@@ -103,7 +103,7 @@ class Validation {
      */
     public static function filterFloat($value) {
         $floatValue = filter_var($value, FILTER_VALIDATE_FLOAT);
-        if($floatValue !== false) {
+        if($floatValue !== false && is_string($value)) {
             $value = $floatValue;
         }
 
