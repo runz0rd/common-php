@@ -75,7 +75,7 @@ class Validation {
 	 */
 	public static function filterInteger($value) {
 		$intValue = filter_var($value, FILTER_VALIDATE_INT);
-		if($intValue !== false && is_string($value)) {
+		if($intValue !== false && !is_bool($value)) {
             $value = $intValue;
 		}
 
@@ -95,6 +95,20 @@ class Validation {
 
 		return $value;
 	}
+
+    /**
+     * Returns a casted float or the original value
+     * @param mixed $value
+     * @return float|mixed
+     */
+    public static function filterFloat($value) {
+        $floatValue = filter_var($value, FILTER_VALIDATE_FLOAT);
+        if($floatValue !== false) {
+            $value = $floatValue;
+        }
+
+        return $value;
+    }
 
 	public static function validateArray($value) {
 		if(!is_array($value)) {
