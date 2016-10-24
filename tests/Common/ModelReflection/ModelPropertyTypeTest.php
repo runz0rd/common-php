@@ -9,7 +9,6 @@
 
 use Common\ModelReflection\ModelClass;
 use Common\ModelReflection\ModelProperty;
-use Common\ModelReflection\ModelPropertyType;
 
 class ModelPropertyTypeTest extends PHPUnit_Framework_TestCase {
 
@@ -22,7 +21,7 @@ class ModelPropertyTypeTest extends PHPUnit_Framework_TestCase {
         $object = new stdClass();
         $object->a = 1;
 
-        $model = new TestModel();
+        $model = new \TestModel();
         $model->noType = null;
         $model->boolTrue = true;
         $model->boolFalse = false;
@@ -39,7 +38,7 @@ class ModelPropertyTypeTest extends PHPUnit_Framework_TestCase {
         $model->alwaysRequiredBoolean = false;
         $model->multipleRequiredInteger = 5;
 
-        $nestedModel = new NestedTestModel();
+        $nestedModel = new \NestedTestModel();
         $nestedModel->noType = null;
         $nestedModel->boolTrue = true;
         $nestedModel->boolFalse = false;

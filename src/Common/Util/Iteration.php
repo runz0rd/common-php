@@ -17,9 +17,10 @@ class Iteration {
      * @param string $name
      * @param object|array $source
      * @param mixed $defaultValue
+     * @param bool $traverse
      * @return mixed
      */
-    public static function findValueByName(string $name, $source, $defaultValue = null) {
+    public static function findValueByName(string $name, $source, $defaultValue = null, bool $traverse = false) {
         if(!is_array($source) && !is_object($source)) {
             throw new \InvalidArgumentException('The source must be an array, or an object with accessible properties.');
         }
@@ -29,13 +30,12 @@ class Iteration {
                 $sourceValue = $value;
                 break;
             }
-            if(is_array($value) || is_object($value)) {
-                $sourceValue = self::findValueByName($name, $value, $defaultValue);
+            if($traverse && (is_array($value) || is_object($value))) {
+                $sourceValue = self::findValueByName($name, $value, $defaultValue, true);
                 if($sourceValue !== $defaultValue) {
                     break;
                 }
             }
-
         }
 
         return $sourceValue;
