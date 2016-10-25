@@ -52,10 +52,9 @@ class ModelPropertyType {
 		if(Validation::isCustomType($this->annotatedType)) {
 			$this->isModel = true;
 			$this->actualType = TypeEnum::OBJECT;
-
-			if(strpos($this->annotatedType, '[]') !== false) {
-				$this->actualType = TypeEnum::ARRAY;
-			}
+		}
+		if(strpos($this->annotatedType, '[]') !== false) {
+			$this->actualType = TypeEnum::ARRAY;
 		}
 	}
 
