@@ -96,6 +96,20 @@ class Validation {
 		return $value;
 	}
 
+    /**
+     * Returns a casted float or the original value
+     * @param mixed $value
+     * @return float|mixed
+     */
+    public static function filterFloat($value) {
+        $floatValue = filter_var($value, FILTER_VALIDATE_FLOAT);
+        if($floatValue !== false && is_string($value)) {
+            $value = $floatValue;
+        }
+
+        return $value;
+    }
+
 	public static function validateArray($value) {
 		if(!is_array($value)) {
 			throw new InvalidArgumentException('Value is not an array.');
