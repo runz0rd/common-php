@@ -98,12 +98,13 @@ class Validation {
 
     /**
      * Returns a casted float or the original value
+     * This one isnt reliable, dont use
      * @param mixed $value
      * @return float|mixed
      */
     public static function filterFloat($value) {
         $floatValue = filter_var($value, FILTER_VALIDATE_FLOAT);
-        if($floatValue !== false && is_string($value)) {
+        if($floatValue !== false && is_string($value) && preg_match('[.|,]', $value)) {
             $value = $floatValue;
         }
 

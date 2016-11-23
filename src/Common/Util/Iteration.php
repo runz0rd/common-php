@@ -76,7 +76,6 @@ class Iteration {
         else {
             $source = Validation::filterInteger($source);
             $source = Validation::filterBoolean($source);
-            $source = Validation::filterFloat($source);
         }
 
         return $source;
