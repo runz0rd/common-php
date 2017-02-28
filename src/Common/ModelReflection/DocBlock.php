@@ -15,19 +15,19 @@ class DocBlock {
 	/**
 	 * @var array
 	 */
-	private $annotations = [];
+	private $annotations = array();
 
 	/**
 	 * @var array
 	 */
-	private $comments = [];
+	private $comments = array();
 
 	/**
 	 * DocBlock constructor.
 	 * Copied from PHPUnit 3.7.29 Util/Test.php
 	 * @param string $docBlock
 	 */
-	public function __construct(string $docBlock = null) {
+	public function __construct($docBlock = null) {
 		if(!Validation::isEmpty($docBlock)) {
 			$annotations = array();
 			$comments = array();
@@ -63,7 +63,7 @@ class DocBlock {
 	 * @param string $name
 	 * @return bool
 	 */
-	public function hasAnnotation(string $name) {
+	public function hasAnnotation($name) {
 		$result = true;
 		if(!isset($this->annotations[$name][0])) {
 			$result = false;
@@ -76,7 +76,7 @@ class DocBlock {
 	 * @param string $name
 	 * @return string
 	 */
-	public function getFirstAnnotation(string $name) {
+	public function getFirstAnnotation($name) {
 		if(!isset($this->annotations[$name][0])) {
 			throw new \InvalidArgumentException('Annotation ' . $name . ' not found in docBlock.');
 		}
@@ -88,7 +88,7 @@ class DocBlock {
 	 * @param string $name
 	 * @return array
 	 */
-	public function getAnnotation(string $name) {
+	public function getAnnotation($name) {
 		if(!isset($this->annotations[$name])) {
 			throw new \InvalidArgumentException('Annotation ' . $name . ' not found in docBlock.');
 		}

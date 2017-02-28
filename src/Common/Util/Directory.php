@@ -17,7 +17,7 @@ class Directory {
      */
     public static function scan($directory, $extension){
         $files = scandir($directory);
-        $results = [];
+        $results = array();
         foreach($files as $key => $value){
             $path = realpath($directory . DIRECTORY_SEPARATOR . $value);
             if(!is_dir($path)) {

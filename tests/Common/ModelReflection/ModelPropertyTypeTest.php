@@ -28,11 +28,11 @@ class ModelPropertyTypeTest extends PHPUnit_Framework_TestCase {
         $model->string = 'a';
         $model->namedString = 'named';
         $model->integer = 5;
-        $model->array = [1,'a',3];
-        $model->stringArray = ['a','b','c'];
-        $model->integerArray = [1,2,3];
-        $model->booleanArray = [true,true,false];
-        $model->objectArray = [$object,$object,$object];
+        $model->array = array(1,'a',3);
+        $model->stringArray = array('a','b','c');
+        $model->integerArray = array(1,2,3);
+        $model->booleanArray = array(true,true,false);
+        $model->objectArray = array($object,$object,$object);
         $model->object = $object;
         $model->requiredString = 'requiredString';
         $model->alwaysRequiredBoolean = false;
@@ -45,18 +45,18 @@ class ModelPropertyTypeTest extends PHPUnit_Framework_TestCase {
         $nestedModel->string = 'a';
         $nestedModel->namedString = 'named';
         $nestedModel->integer = 5;
-        $nestedModel->array = [1,'a',3];
-        $nestedModel->stringArray = ['a','b','c'];
-        $nestedModel->integerArray = [1,2,3];
-        $nestedModel->booleanArray = [true,true,false];
-        $nestedModel->objectArray = [$object,$object,$object];
+        $nestedModel->array = array(1,'a',3);
+        $nestedModel->stringArray = array('a','b','c');
+        $nestedModel->integerArray = array(1,2,3);
+        $nestedModel->booleanArray = array(true,true,false);
+        $nestedModel->objectArray = array($object,$object,$object);
         $nestedModel->object = $object;
         $nestedModel->requiredString = 'requiredString';
         $nestedModel->alwaysRequiredBoolean = false;
         $nestedModel->multipleRequiredInteger = 5;
 
         $model->model = $nestedModel;
-        $model->modelArray = [$nestedModel,$nestedModel];
+        $model->modelArray = array($nestedModel,$nestedModel);
 
         $modelClass = new ModelClass($model);
         $this->modelProperties = $modelClass->getProperties();
@@ -127,23 +127,23 @@ class ModelPropertyTypeTest extends PHPUnit_Framework_TestCase {
 
     public function validValues() {
         return [
-            [0, false, 'NULL', 'any', 'any', ''],
-            [1, false, 'boolean', 'boolean', 'boolean', ''],
-            [2, false, 'boolean', 'boolean', 'boolean', ''],
-            [3, false, 'string', 'string', 'string', ''],
-            [4, false, 'string', 'string', 'string', ''],
-            [5, false, 'integer', 'integer', 'integer', ''],
-            [6, false, 'array', 'array', 'array', ''],
-            [7, false, 'array', 'string[]', 'array', ''],
-            [8, false, 'array', 'integer[]', 'array', ''],
-            [9, false, 'array', 'boolean[]', 'array', ''],
-            [10, false, 'array', 'object[]', 'array', ''],
-            [11, false, 'object', 'object', 'object', ''],
-            [12, true, 'object', 'NestedTestModel', 'object', '\NestedTestModel'],
-            [13, true, 'array', 'NestedTestModel[]', 'array', '\NestedTestModel'],
-            [14, false, 'string', 'string', 'string', ''],
-            [15, false, 'boolean', 'boolean', 'boolean', ''],
-            [16, false, 'integer', 'integer', 'integer', '']
+            array(0, false, 'NULL', 'any', 'any', ''),
+            array(1, false, 'boolean', 'boolean', 'boolean', ''),
+            array(2, false, 'boolean', 'boolean', 'boolean', ''),
+            array(3, false, 'string', 'string', 'string', ''),
+            array(4, false, 'string', 'string', 'string', ''),
+            array(5, false, 'integer', 'integer', 'integer', ''),
+            array(6, false, 'array', 'array', 'array', ''),
+            array(7, false, 'array', 'string[]', 'array', ''),
+            array(8, false, 'array', 'integer[]', 'array', ''),
+            array(9, false, 'array', 'boolean[]', 'array', ''),
+            array(10, false, 'array', 'object[]', 'array', ''),
+            array(11, false, 'object', 'object', 'object', ''),
+            array(12, true, 'object', 'NestedTestModel', 'object', '\NestedTestModel'),
+            array(13, true, 'array', 'NestedTestModel[]', 'array', '\NestedTestModel'),
+            array(14, false, 'string', 'string', 'string', ''),
+            array(15, false, 'boolean', 'boolean', 'boolean', ''),
+            array(16, false, 'integer', 'integer', 'integer', '')
         ];
     }
 }

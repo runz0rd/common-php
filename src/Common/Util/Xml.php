@@ -14,7 +14,7 @@ class Xml {
 	 * @param string $name
 	 * @return bool
 	 */
-	public static function isValidElementName(string $name) {
+	public static function isValidElementName($name) {
 		try {
 			new \DOMElement($name, null);
 			$result = true;
@@ -29,7 +29,7 @@ class Xml {
 	 * @param string $filename
 	 * @return string
 	 */
-	public static function loadFromFile(string $filename) {
+	public static function loadFromFile($filename) {
 		$contents = file_get_contents($filename);
 		$contents = str_replace("\n", '', $contents);
 		$contents = str_replace("\r", '', $contents);
@@ -44,7 +44,7 @@ class Xml {
      * @param string $key
      * @return bool
      */
-    public static function isDomNodeArray(\DOMNode $parentElement, string $key) {
+    public static function isDomNodeArray(\DOMNode $parentElement, $key) {
         $result = false;
         $keyCount = 0;
         for($i = 0; $i < $parentElement->childNodes->length; $i++) {
@@ -65,7 +65,7 @@ class Xml {
 	 * @param string $xml
 	 * @return string
 	 */
-	public static function removeWhitespace(string $xml) {
+	public static function removeWhitespace($xml) {
 		return preg_replace('/>\s*</', '><', $xml);
 	}
 }

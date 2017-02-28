@@ -43,7 +43,7 @@ class ModelPropertyType {
      * @param string $annotatedType
      * @param string $parentNS
      */
-	public function __construct(string $propertyType, string $annotatedType, string $parentNS) {
+	public function __construct($propertyType, $annotatedType, $parentNS) {
 		$this->propertyType = $propertyType;
 		$this->annotatedType = $annotatedType;
 		$this->parentNS = $parentNS;

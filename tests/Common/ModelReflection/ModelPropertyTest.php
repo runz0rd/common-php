@@ -28,11 +28,11 @@ class ModelPropertyTest extends PHPUnit_Framework_TestCase {
         $model->string = 'a';
         $model->namedString = 'named';
         $model->integer = 5;
-        $model->array = [1,'a',3];
-        $model->stringArray = ['a','b','c'];
-        $model->integerArray = [1,2,3];
-        $model->booleanArray = [true,true,false];
-        $model->objectArray = [$object,$object,$object];
+        $model->array = array(1,'a',3);
+        $model->stringArray = array('a','b','c');
+        $model->integerArray = array(1,2,3);
+        $model->booleanArray = array(true,true,false);
+        $model->objectArray = array($object,$object,$object);
         $model->object = $object;
         $model->requiredString = 'requiredString';
         $model->alwaysRequiredBoolean = false;
@@ -45,18 +45,18 @@ class ModelPropertyTest extends PHPUnit_Framework_TestCase {
         $nestedModel->string = 'a';
         $nestedModel->namedString = 'named';
         $nestedModel->integer = 5;
-        $nestedModel->array = [1,'a',3];
-        $nestedModel->stringArray = ['a','b','c'];
-        $nestedModel->integerArray = [1,2,3];
-        $nestedModel->booleanArray = [true,true,false];
-        $nestedModel->objectArray = [$object,$object,$object];
+        $nestedModel->array = array(1,'a',3);
+        $nestedModel->stringArray = array('a','b','c');
+        $nestedModel->integerArray = array(1,2,3);
+        $nestedModel->booleanArray = array(true,true,false);
+        $nestedModel->objectArray = array($object,$object,$object);
         $nestedModel->object = $object;
         $nestedModel->requiredString = 'requiredString';
         $nestedModel->alwaysRequiredBoolean = false;
         $nestedModel->multipleRequiredInteger = 5;
 
         $model->model = $nestedModel;
-        $model->modelArray = [$nestedModel,$nestedModel];
+        $model->modelArray = array($nestedModel,$nestedModel);
 
         $modelClass = new ModelClass($model);
         $this->modelProperties = $modelClass->getProperties();
@@ -168,11 +168,11 @@ class ModelPropertyTest extends PHPUnit_Framework_TestCase {
         $model->string = 'a';
         $model->namedString = 'named';
         $model->integer = 5;
-        $model->array = [1,'a',3];
-        $model->stringArray = ['a','b','c'];
-        $model->integerArray = [1,2,3];
-        $model->booleanArray = [true,true,false];
-        $model->objectArray = [$object,$object,$object];
+        $model->array = array(1,'a',3);
+        $model->stringArray = array('a','b','c');
+        $model->integerArray = array(1,2,3);
+        $model->booleanArray = array(true,true,false);
+        $model->objectArray = array($object,$object,$object);
         $model->object = $object;
         $model->requiredString = 'requiredString';
         $model->alwaysRequiredBoolean = false;
@@ -185,37 +185,37 @@ class ModelPropertyTest extends PHPUnit_Framework_TestCase {
         $nestedModel->string = 'a';
         $nestedModel->namedString = 'named';
         $nestedModel->integer = 5;
-        $nestedModel->array = [1,'a',3];
-        $nestedModel->stringArray = ['a','b','c'];
-        $nestedModel->integerArray = [1,2,3];
-        $nestedModel->booleanArray = [true,true,false];
-        $nestedModel->objectArray = [$object,$object,$object];
+        $nestedModel->array = array(1,'a',3);
+        $nestedModel->stringArray = array('a','b','c');
+        $nestedModel->integerArray = array(1,2,3);
+        $nestedModel->booleanArray = array(true,true,false);
+        $nestedModel->objectArray = array($object,$object,$object);
         $nestedModel->object = $object;
         $nestedModel->requiredString = 'requiredString';
         $nestedModel->alwaysRequiredBoolean = false;
         $nestedModel->multipleRequiredInteger = 5;
 
         $model->model = $nestedModel;
-        $model->modelArray = [$nestedModel,$nestedModel];
+        $model->modelArray = array($nestedModel,$nestedModel);
 
         return [
-            [0, $model->noType, 'noType', 'noType', '', false, []],
-            [1, $model->boolTrue, 'boolTrue', 'boolTrue', '', false, []],
-            [2, $model->boolFalse, 'boolFalse', 'boolFalse', '', false, []],
-            [3, $model->string, 'string', 'string', '', false, []],
-            [4, $model->namedString, 'namedString123', 'namedString', 'namedString123', false, []],
-            [5, $model->integer, 'integer', 'integer', '', false, []],
-            [6, $model->array, 'array', 'array', '', false, []],
-            [7, $model->stringArray, 'stringArray', 'stringArray', '', false, []],
-            [8, $model->integerArray, 'integerArray', 'integerArray', '', false, []],
-            [9, $model->booleanArray, 'booleanArray', 'booleanArray', '', false, []],
-            [10, $model->objectArray, 'objectArray', 'objectArray', '', false, []],
-            [11, $model->object, 'object', 'object', '', false, []],
-            [12, $model->model, 'model', 'model', '', false, []],
-            [13, $model->modelArray, 'modelArray', 'modelArray', '', false, []],
-            [14, $model->requiredString, 'requiredString', 'requiredString', '', true, ['requiredString', 'testRequired']],
-            [15, $model->alwaysRequiredBoolean, 'alwaysRequiredBoolean', 'alwaysRequiredBoolean', '', true, ['']],
-            [16, $model->multipleRequiredInteger, 'multipleRequiredInteger', 'multipleRequiredInteger', '', true, ['requiredInteger', 'testRequired']],
+            array(0, $model->noType, 'noType', 'noType', '', false, array()),
+            array(1, $model->boolTrue, 'boolTrue', 'boolTrue', '', false, array()),
+            array(2, $model->boolFalse, 'boolFalse', 'boolFalse', '', false, array()),
+            array(3, $model->string, 'string', 'string', '', false, array()),
+            array(4, $model->namedString, 'namedString123', 'namedString', 'namedString123', false, array()),
+            array(5, $model->integer, 'integer', 'integer', '', false, array()),
+            array(6, $model->array, 'array', 'array', '', false, array()),
+            array(7, $model->stringArray, 'stringArray', 'stringArray', '', false, array()),
+            array(8, $model->integerArray, 'integerArray', 'integerArray', '', false, array()),
+            array(9, $model->booleanArray, 'booleanArray', 'booleanArray', '', false, array()),
+            array(10, $model->objectArray, 'objectArray', 'objectArray', '', false, array()),
+            array(11, $model->object, 'object', 'object', '', false, array()),
+            array(12, $model->model, 'model', 'model', '', false, array()),
+            array(13, $model->modelArray, 'modelArray', 'modelArray', '', false, array()),
+            array(14, $model->requiredString, 'requiredString', 'requiredString', '', true, array('requiredString', 'testRequired')),
+            array(15, $model->alwaysRequiredBoolean, 'alwaysRequiredBoolean', 'alwaysRequiredBoolean', '', true, array('')),
+            array(16, $model->multipleRequiredInteger, 'multipleRequiredInteger', 'multipleRequiredInteger', '', true, array('requiredInteger', 'testRequired')),
         ];
     }
 }

@@ -35,10 +35,10 @@ class Validation {
 	 * @param string $type
 	 * @return bool
 	 */
-	public static function isCustomType(string $type) {
+	public static function isCustomType($type) {
 		$result = true;
-		$simpleTypes = ['any', 'NULL', 'boolean', 'bool', 'int', 'integer', 'double', 'string', 'array', 'object', 'boolean[]',
-			'integer[]', 'double[]', 'string[]', '[]', 'object[]'];
+		$simpleTypes = array('any', 'NULL', 'boolean', 'bool', 'int', 'integer', 'double', 'string', 'array', 'object', 'boolean[]',
+			'integer[]', 'double[]', 'string[]', '[]', 'object[]');
 		foreach($simpleTypes as $simpleType) {
 			if($type == $simpleType) {
 				$result = false;
@@ -55,7 +55,7 @@ class Validation {
      * @param string $propertyName
      * @return bool
      */
-    public static function hasProperty($source, string $propertyName) {
+    public static function hasProperty($source, $propertyName) {
         if(!is_object($source)) {
             throw new \InvalidArgumentException('The source must be an object with accessible properties.');
         }

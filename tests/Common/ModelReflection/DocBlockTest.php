@@ -88,22 +88,22 @@ class DocBlockTest extends PHPUnit_Framework_TestCase {
     }
 
     public function validValues() {
-        $annotations = [
-            'testAnnotation' => ['test1', 'test1'],
-            'anotherTestAnnotation' => ['test2']
-        ];
+        $annotations = array(
+            'testAnnotation' => array('test1', 'test1'),
+            'anotherTestAnnotation' => array('test2')
+        );
 
-        return [
-            ['testAnnotation', $annotations],
-            ['anotherTestAnnotation', $annotations]
-        ];
+        return array(
+            array('testAnnotation', $annotations),
+            array('anotherTestAnnotation', $annotations)
+        );
     }
 
     public function invalidValues() {
-        return [
-            ['asdf'],
-            ['invalidAnnotation'],
-            ['']
-        ];
+        return array(
+            array('asdf'),
+            array('invalidAnnotation'),
+            array('')
+    );
     }
 }

@@ -20,7 +20,7 @@ class Iteration {
      * @param bool $traverse
      * @return mixed
      */
-    public static function findValueByName(string $name, $source, $defaultValue = null, bool $traverse = false) {
+    public static function findValueByName($name, $source, $defaultValue = null, $traverse = false) {
         if(!is_array($source) && !is_object($source)) {
             throw new \InvalidArgumentException('The source must be an array, or an object with accessible properties.');
         }
@@ -88,7 +88,7 @@ class Iteration {
      * @param mixed $value
      * @return array|object
      */
-    public static function assign($source, string $key, $value) {
+    public static function assign($source, $key, $value) {
         if(!is_array($source) && !is_object($source)) {
             throw new \InvalidArgumentException('The source must be an array, or an object with accessible properties.');
         }
@@ -108,7 +108,7 @@ class Iteration {
      * @param string $needle
      * @return string|null
      */
-    public static function strposArray(array $haystackArray, string $needle) {
+    public static function strposArray(array $haystackArray, $needle) {
         $result = null;
         foreach($haystackArray as $haystack) {
             if(strpos($haystack, $needle) !== false) {
@@ -124,7 +124,7 @@ class Iteration {
      * @param string $regex
      * @return string|null
      */
-    public static function regexArray(array $haystackArray, string $regex) {
+    public static function regexArray(array $haystackArray, $regex) {
         $result = null;
         foreach($haystackArray as $haystack) {
             if(preg_match($regex, $haystack, $matches)) {
@@ -143,12 +143,12 @@ class Iteration {
      * @param mixed $value
      * @return object
      */
-    public static function pushArrayValue($object, string $key, $value) {
+    public static function pushArrayValue($object, $key, $value) {
         if(!is_object($object)) {
             throw new \InvalidArgumentException('The source must be an object with accessible properties.');
         }
         if(!isset($object->$key) || !is_array($object->$key)) {
-            $object->$key = [];
+            $object->$key = array();
         }
         array_push($object->$key, $value);
     }

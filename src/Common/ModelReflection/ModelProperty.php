@@ -64,7 +64,7 @@ class ModelProperty {
 	 * @param object $parent
 	 * @param string $parentNS
 	 */
-	public function __construct(\ReflectionProperty $property, $parent, string $parentNS) {
+	public function __construct(\ReflectionProperty $property, $parent, $parentNS) {
 		$this->property = $property;
 		$this->object = $parent;
 		$this->docBlock = new DocBlock($property->getDocComment());
@@ -84,7 +84,7 @@ class ModelProperty {
 		$this->type = new ModelPropertyType($propertyType, $annotatedType, $parentNS);
 
 		$this->isRequired = false;
-        $this->requiredActions = [];
+        $this->requiredActions = array();
 		if($this->docBlock->hasAnnotation(AnnotationEnum::REQUIRED)) {
 			$this->isRequired = true;
 			$this->requiredActions = $this->docBlock->getAnnotation(AnnotationEnum::REQUIRED);

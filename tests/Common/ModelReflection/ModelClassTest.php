@@ -27,11 +27,11 @@ class ModelClassTest extends PHPUnit_Framework_TestCase {
         $model->string = 'a';
         $model->namedString = 'named';
         $model->integer = 5;
-        $model->array = [1,'a',3];
-        $model->stringArray = ['a','b','c'];
-        $model->integerArray = [1,2,3];
-        $model->booleanArray = [true,true,false];
-        $model->objectArray = [$object,$object,$object];
+        $model->array = array(1,'a',3);
+        $model->stringArray = array('a','b','c');
+        $model->integerArray = array(1,2,3);
+        $model->booleanArray = array(true,true,false);
+        $model->objectArray = array($object,$object,$object);
         $model->object = $object;
 
         $nestedModel = new \NestedTestModel();
@@ -41,18 +41,18 @@ class ModelClassTest extends PHPUnit_Framework_TestCase {
         $nestedModel->string = 'a';
         $nestedModel->namedString = 'named';
         $nestedModel->integer = 5;
-        $nestedModel->array = [1,'a',3];
-        $nestedModel->stringArray = ['a','b','c'];
-        $nestedModel->integerArray = [1,2,3];
-        $nestedModel->booleanArray = [true,true,false];
-        $nestedModel->objectArray = [$object,$object,$object];
+        $nestedModel->array = array(1,'a',3);
+        $nestedModel->stringArray = array('a','b','c');
+        $nestedModel->integerArray = array(1,2,3);
+        $nestedModel->booleanArray = array(true,true,false);
+        $nestedModel->objectArray = array($object,$object,$object);
         $nestedModel->object = $object;
         $nestedModel->requiredString = 'requiredString';
         $nestedModel->alwaysRequiredBoolean = false;
         $nestedModel->multipleRequiredInteger = 5;
 
         $model->model = $nestedModel;
-        $model->modelArray = [$nestedModel,$nestedModel];
+        $model->modelArray = array($nestedModel,$nestedModel);
 
         $this->modelClass = new ModelClass($model);
         parent::setUp();
@@ -97,11 +97,11 @@ class ModelClassTest extends PHPUnit_Framework_TestCase {
     }
 
     public function invalidModels() {
-        return [
-            [new stdClass()],
-            [new DateTime()],
-            [null],
-            [false]
-        ];
+        return array(
+            array(new stdClass()),
+            array(new DateTime()),
+            array(null),
+            array(false)
+        );
     }
 }

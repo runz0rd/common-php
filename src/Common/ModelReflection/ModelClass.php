@@ -107,7 +107,7 @@ class ModelClass {
 		return $this->docBlock;
 	}
 
-	public static function instantiate(string $modelClassName) {
+	public static function instantiate($modelClassName) {
 	    try {
             $reflectionClass = new \ReflectionClass($modelClassName);
             $model = $reflectionClass->newInstanceWithoutConstructor();
