@@ -54,7 +54,7 @@ class ModelPropertyType {
 			$this->actualType = TypeEnum::OBJECT;
 		}
 		if(strpos($this->annotatedType, '[]') !== false) {
-			$this->actualType = TypeEnum::ARRAY;
+			$this->actualType = TypeEnum::ARR;
 		}
 	}
 

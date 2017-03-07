@@ -15,6 +15,6 @@ class TypeEnum {
     const INTEGER = 'integer';
     const DOUBLE = 'double';
     const STRING = 'string';
-    const ARRAY = 'array';
+    const ARR = 'array';
     const OBJECT = 'object';
 }

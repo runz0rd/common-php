@@ -78,8 +78,8 @@ class ModelProperty {
 
 		$propertyType = gettype($this->property->getValue($parent));
 		$annotatedType = TypeEnum::ANY;
-		if($this->docBlock->hasAnnotation(AnnotationEnum::VAR) && !Validation::isEmpty($this->docBlock->getFirstAnnotation(AnnotationEnum::VAR))) {
-			$annotatedType = $this->docBlock->getFirstAnnotation(AnnotationEnum::VAR);
+		if($this->docBlock->hasAnnotation(AnnotationEnum::VARIABLE) && !Validation::isEmpty($this->docBlock->getFirstAnnotation(AnnotationEnum::VARIABLE))) {
+			$annotatedType = $this->docBlock->getFirstAnnotation(AnnotationEnum::VARIABLE);
 		}
 		$this->type = new ModelPropertyType($propertyType, $annotatedType, $parentNS);
 
@@ -91,7 +91,7 @@ class ModelProperty {
 		}
 	}
 
-	/**
+	/**::
 	 * @param mixed $value
 	 */
 	public function setPropertyValue($value) {
