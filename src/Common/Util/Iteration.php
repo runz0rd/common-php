@@ -17,28 +17,48 @@ class Iteration {
      * @param string $name
      * @param object|array $source
      * @param mixed $defaultValue
-     * @param bool $traverse
      * @return mixed
      */
-    public static function findValueByName($name, $source, $defaultValue = null, $traverse = false) {
+    public static function findValueByName($name, $source, $defaultValue = null) {
         if(!is_array($source) && !is_object($source)) {
             throw new \InvalidArgumentException('The source must be an array, or an object with accessible properties.');
         }
         $sourceValue = $defaultValue;
-        foreach($source as $key => $value) {
-            if($name === $key && !Validation::isEmpty($value)) {
-                $sourceValue = $value;
-                break;
-            }
-            if($traverse && (is_array($value) || is_object($value))) {
-                $sourceValue = self::findValueByName($name, $value, $defaultValue, true);
-                if($sourceValue !== $defaultValue) {
-                    break;
-                }
-            }
+        if(is_array($source)) {
+            $sourceValue = self::findValueInArray($source, $name, $defaultValue);
+        }
+        elseif($source instanceof \SimpleXMLElement) {
+            $sourceValue = self::findValueInSimpleXmlElement($source, $name, $defaultValue);
+        }
+        elseif(is_object($source)) {
+            $sourceValue = self::findValueInObject($source, $name, $defaultValue);
         }
 
         return $sourceValue;
+    }
+
+    public static function findValueInArray($source, $name, $defaultValue) {
+        $value = $defaultValue;
+        if(isset($source[$name]) && !Validation::isEmpty($value)) {
+            $value = $source[$name];
+        }
+        return $value;
+    }
+
+    public static function findValueInObject($source, $name, $defaultValue) {
+        $value = $defaultValue;
+        if(isset($source->$name) && !Validation::isEmpty($source->$name)) {
+            $value = $source->$name;
+        }
+        return $value;
+    }
+
+    public function findValueInSimpleXmlElement(\SimpleXMLElement $source, $name, $defaultValue) {
+        $value = self::findValueInObject($source, $name, $defaultValue);
+        if($value instanceof \SimpleXMLElement && $value->children()->count() === 0) {
+            $value = (string) $value;
+        }
+        return $value;
     }
 
     /**
