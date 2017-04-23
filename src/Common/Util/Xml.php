@@ -30,7 +30,12 @@ class Xml {
 	 * @return string
 	 */
 	public static function loadFromFile($filename) {
-		return File::read($filename);
+		return File::read($filename, function($content) {
+			$content = str_replace("\n", '', $content);
+			$content = str_replace("\r", '', $content);
+			$content = str_replace('    ', '', $content);
+			return $content;
+		});
 	}
 
     /**

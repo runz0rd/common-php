@@ -26,13 +26,11 @@ class File {
 
     /**
      * @param string $filename
+     * @param Closure $processContent
      * @return string
      */
-    public static function read($filename) {
-        $contents = file_get_contents($filename);
-        $contents = str_replace("\n", '', $contents);
-        $contents = str_replace("\r", '', $contents);
-        $contents = str_replace('    ', '', $contents);
-        return $contents;
+    public static function read($filename, $processContent) {
+        $content = file_get_contents($filename);
+        return processContent(file_get_contents($filename));
     }
 }
