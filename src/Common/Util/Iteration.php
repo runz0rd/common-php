@@ -53,7 +53,7 @@ class Iteration {
         return $value;
     }
 
-    public function findValueInSimpleXmlElement(\SimpleXMLElement $source, $name, $defaultValue) {
+    public function findValueInSimpleXmlElement($source, $name, $defaultValue) {
         $value = self::findValueInObject($source, $name, $defaultValue);
         if($value instanceof \SimpleXMLElement && $value->children()->count() === 0) {
             $value = (string) $value;
@@ -128,7 +128,7 @@ class Iteration {
      * @param string $needle
      * @return string|null
      */
-    public static function strposArray(array $haystackArray, $needle) {
+    public static function strposArray($haystackArray, $needle) {
         $result = null;
         foreach($haystackArray as $haystack) {
             if(strpos($haystack, $needle) !== false) {
@@ -144,7 +144,7 @@ class Iteration {
      * @param string $regex
      * @return string|null
      */
-    public static function regexArray(array $haystackArray, $regex) {
+    public static function regexArray($haystackArray, $regex) {
         $result = null;
         foreach($haystackArray as $haystack) {
             if(preg_match($regex, $haystack, $matches)) {

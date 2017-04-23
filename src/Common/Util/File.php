@@ -23,4 +23,16 @@ class File {
         fwrite($fh, $data);
         fclose($fh);
     }
+
+    /**
+     * @param string $filename
+     * @return string
+     */
+    public static function read($filename) {
+        $contents = file_get_contents($filename);
+        $contents = str_replace("\n", '', $contents);
+        $contents = str_replace("\r", '', $contents);
+        $contents = str_replace('    ', '', $contents);
+        return $contents;
+    }
 }
