@@ -29,8 +29,11 @@ class File {
      * @param Closure $processContent
      * @return string
      */
-    public static function read($filename, $processContent) {
+    public static function read($filename, $processContent = null) {
         $content = file_get_contents($filename);
-        return processContent(file_get_contents($filename));
+        if($processContent instanceof \Closure) {
+            $content = $processContent($content);
+        }
+        return $content;
     }
 }
